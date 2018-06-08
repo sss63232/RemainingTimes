@@ -1,0 +1,60 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe D:\Program Files (x86)\Yarn\bin\yarn.js
+
+PATH: 
+  C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\newtchen.JUMBO\bin;C:\Program Files\Docker\Docker\Resources\bin;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client;C:\Program Files\Intel\iCLS Client;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files\Git\cmd;C:\HaxeToolkit\haxe;C:\HaxeToolkit\neko;C:\Program Files\PuTTY;C:\Program Files\nodejs;C:\ProgramData\chocolatey\bin;D:\Softwares\ffmpeg\bin;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;D:\Program Files (x86)\Yarn\bin;C:\Users\newtchen.JUMBO\scoop\shims;C:\Ruby24-x64\bin;C:\Users\newtchen.JUMBO\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft VS Code\bin;D:\ffmpeg\bin;D:\ngrok-stable-windows-amd64;C:\Users\newtchen.JUMBO\AppData\Roaming\npm;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;D:\Softwares\cmder;C:\Users\newtchen.JUMBO\AppData\Local\Yarn\bin;%DASHLANE_DLL_DIR%
+
+Yarn version: 
+  1.7.0
+
+Node version: 
+  8.9.4
+
+Platform: 
+  win32 x64
+
+Trace: 
+  SyntaxError: D:\MyProjects\RemainingTimes\package.json: Unexpected end of JSON input
+      at JSON.parse (<anonymous>)
+      at D:\Program Files (x86)\Yarn\lib\cli.js:1130:59
+      at Generator.next (<anonymous>)
+      at step (D:\Program Files (x86)\Yarn\lib\cli.js:98:30)
+      at D:\Program Files (x86)\Yarn\lib\cli.js:109:13
+      at <anonymous>
+
+npm manifest: 
+  {
+    "name": "remaining_times",
+    "version": "0.0.1",
+    "description": "the remaining times of spring or sth",
+    "scripts": {
+      "build": "node utils/build.js",
+      "start": "node utils/webserver.js",
+      "dev": "node utils/webserver.js"
+    },
+    "devDependencies": {
+      "babel-eslint": "^8.2.3",
+      "babel-loader": "^7.1.4",
+      "clean-webpack-plugin": "^0.1.17",
+      "copy-webpack-plugin": "^4.2.0",
+      "css-loader": "^0.25.0",
+      "eslint": "^4.19.1",
+      "eslint-config-prettier": "^2.9.0",
+      "eslint-plugin-prettier": "^2.6.0",
+      "file-loader": "^0.11.2",
+      "fs-extra": "^0.30.0",
+      "html-loader": "^0.4.5",
+      "html-webpack-plugin": "2.24.1",
+      "prettier": "^1.13.4",
+      "style-loader": "^0.13.0",
+      "webpack": "2.2.1",
+      "webpack-dev-server": "^2.3.0",
+      "write-file-webpack-plugin": "3.4.2",
+      "dayjs": "^1.6.6"
+    }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
