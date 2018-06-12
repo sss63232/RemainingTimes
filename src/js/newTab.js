@@ -12,17 +12,19 @@ class App {
 
     this.$el.addEventListener(`submit`, this.submit.bind(this));
 
-    if (this.dateOfBirth) {
+    if (this.country) {
       this.renderAgeLoop();
     } else {
-      this.renderChoose();
+      this.renderCountry();
     }
   }
 
   load() {
-    var value;
-
-    if ((value = localStorage.dateOfBirth)) this.dateOfBirth = new Date(parseInt(value));
+    const { dateOfBirth, country } = localStorage;
+    if (dateOfBirth && country) {
+      this.country = country;
+      this.dateOfBirth = new Date(parseInt(dateOfBirth));
+    }
   }
 
   save() {
@@ -42,6 +44,44 @@ class App {
 
   renderChoose() {
     this.html(this.view('dob')());
+  }
+
+  renderCountry() {
+    this.html(this.view('country')());
+    this.getCountryByAPI();
+  }
+
+  getCountryByNavigator() {
+    navigator.geolocation.getCurrentPosition(data => {
+      const { latitude, longitude } = data.coords;
+      let latlng = `${latitude},${longitude}`;
+      fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`)
+        .then(res => res.json())
+        .then(json => {
+          const results = json.results;
+          const countryLongName = results[results.length - 1].formatted_address;
+          document.getElementById('detectedCountry').textContent = countryLongName;
+        });
+    });
+  }
+
+  getCountryByAPI() {
+    fetch(`http://ip-api.com/json`)
+      .then(data => data.json())
+      .then(json => {
+        this.country = json.country;
+        document.getElementById('detectedCountry').textContent = json.country;
+      })
+      .catch(error => {
+        console.log('---------');
+        console.log(error);
+        console.log('---------');
+        this.getCountryByNavigator();
+      });
+  }
+
+  replaceTextContent(element, txt) {
+    element.textContent = txt;
   }
 
   renderAgeLoop() {
@@ -89,34 +129,6 @@ class App {
 // console.log(lifeData.filter(data => data.country === `Iceland`));
 
 let location;
-
-// navigator.geolocation.getCurrentPosition(data => {
-//   const { latitude, longitude } = data.coords;
-//   let latlng = `${latitude},${longitude}`;
-//   fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`)
-//     .then(res => res.json())
-//     .then(json => {
-//       const results = json.results;
-//       const countryLongName = results[results.length - 1].formatted_address;
-//       console.log('---------');
-//       console.log(countryLongName);
-//       console.log('---------');
-//     });
-// });
-
-// fetch(`http://ip-api.com/json`)
-//   .then(data => data.json())
-//   .then(json => {
-//     console.log('---------');
-//     console.log(json.country);
-//     console.log(json.countryCode);
-//     console.log('---------');
-//   })
-//   .catch(error => {
-//     console.log('--------');
-//     console.log(error);
-//     console.log('--------');
-//   });
 
 // const unsplashInstance = new Unsplash({
 //   applicationId: 'de67f1ba6f631670eedefff4c31bc09c840310d39a12d6785c1eb0f06fb7146f',
