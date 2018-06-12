@@ -1,9 +1,8 @@
 {
   "name": "Remaining Time",
   "chrome_url_overrides": {
-    "newtab": "options.html"
+    "newtab": "newTab.html"
   },
-  "options_page": "options.html",
   "icons": {},
   "manifest_version": 2,
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",

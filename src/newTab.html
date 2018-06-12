@@ -9,6 +9,18 @@
 <body>
   <div id="app"></div>
 
+  <script id="location-template" type="text/x-handlebars-template">
+    <form>
+      <h1 class="location-label">Are you from </h1>
+
+      <footer>
+        <h2 id='detectedLocation'>{{detectedLocation}}</h2>
+        <button type="submit" id='location-yes'>Yes</button>
+        <button type="submit" id='location-no'>No</button>
+      </footer>
+    <form>
+  </script>
+
   <script id="dob-template" type="text/x-handlebars-template">
     <form>
       <h1 id="dob" class="age-label">When were you born?</h1>

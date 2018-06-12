@@ -12,18 +12,7 @@ var alias = {};
 
 var secretsPath = path.join(__dirname, 'secrets.' + env.NODE_ENV + '.js');
 
-var fileExtensions = [
-  'jpg',
-  'jpeg',
-  'png',
-  'gif',
-  'eot',
-  'otf',
-  'svg',
-  'ttf',
-  'woff',
-  'woff2',
-];
+var fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2'];
 
 if (fileSystem.existsSync(secretsPath)) {
   alias['secrets'] = secretsPath;
@@ -32,7 +21,7 @@ if (fileSystem.existsSync(secretsPath)) {
 var options = {
   entry: {
     popup: path.join(__dirname, 'src', 'js', 'popup.js'),
-    options: path.join(__dirname, 'src', 'js', 'options.js'),
+    newTab: path.join(__dirname, 'src', 'js', 'newTab.js'),
     background: path.join(__dirname, 'src', 'js', 'background.js'),
   },
   output: {
@@ -89,9 +78,9 @@ var options = {
       chunks: ['popup'],
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'options.html'),
-      filename: 'options.html',
-      chunks: ['options'],
+      template: path.join(__dirname, 'src', 'newTab.html'),
+      filename: 'newTab.html',
+      chunks: ['newTab'],
     }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'background.html'),
