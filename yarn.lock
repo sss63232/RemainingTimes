@@ -1073,9 +1073,9 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-dayjs@^1.6.6:
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.6.6.tgz#2bb0d2e14f56301d364339140afcac6fb7e6e0e2"
+dayjs@^1.6.7:
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.6.7.tgz#efebec11e979d83c21ebe575686c00a120d03bf7"
 
 debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.6, debug@^2.6.8:
   version "2.6.9"

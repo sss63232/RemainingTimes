@@ -1,12 +1,19 @@
 import Handlebars from './3rd/handlebars';
+import dayjs from 'dayjs';
 import country_list from 'country-list';
 import lifeData from './life.json';
+import countryByLifeExpectancy from '../../lifeData/country-by-life-expectancy.json';
 
 // import Unsplash, { toJson } from 'unsplash-js';
 // import UnsplashHandler from './main/UnsplashHandler';
 
 const $ = document.getElementById.bind(document);
 const $$ = document.querySelectorAll.bind(document);
+
+console.log('---------');
+console.log(countryByLifeExpectancy);
+console.log('---------');
+
 class App {
   constructor($el) {
     this.$el = $el;
@@ -20,7 +27,7 @@ class App {
     if (this.country) {
       this.renderAgeLoop();
     } else {
-      this.renderCountry();
+      this.showCountryPage();
     }
   }
 
@@ -28,20 +35,13 @@ class App {
     const { dateOfBirth, country } = localStorage;
     if (dateOfBirth && country) {
       this.country = country;
-      this.dateOfBirth = new Date(parseInt(dateOfBirth));
+      this.birth = new Date(parseInt(dateOfBirth));
     }
   }
 
   save() {
-    if (this.dateOfBirth)
-      localStorage.dateOfBirth = this.dateOfBirth.getTime();
+    if (this.birth) localStorage.dateOfBirth = this.birth.getTime();
   }
-
-  setChromeSync(value, callback) {
-    chrome.storage.sync.set(value, callback);
-  }
-
-  getChromeSync()
 
   submit(e) {
     e.preventDefault();
@@ -49,61 +49,95 @@ class App {
     var input = this.$$('input')[0];
     if (!input.valueAsDate) return;
 
-    this.dateOfBirth = input.valueAsDate;
+    this.birth = input.valueAsDate;
     this.save();
     this.renderAgeLoop();
   }
 
-  renderChoose() {
-    this.html(this.view('dob')());
+  showBirthPage() {
+    this.render('birth');
+    $(`submitBirth`).addEventListener(`click`, this.submitBirth.bind(this));
+
+    // for test
+    $(`birthInput`).value = `1993-01-01`;
   }
 
-  renderCountry() {
-    this.html(this.view('country')());
+  submitBirth(e) {
+    e.preventDefault();
+
+    const birthInputValue = $(`birthInput`).value;
+    if (birthInputValue) {
+      this.birth = birthInputValue;
+      this.setChromeSync({ birth: birthInputValue }, () => {
+        console.log('---------');
+        console.log(`set birth success`);
+        console.log('---------');
+      });
+      this.render(`time`, { birth: this.birth, country: this.country });
+    }
+  }
+
+  renderTime() {
+    this.html(this.view(`time`)());
+  }
+
+  showCountryPage() {
+    this.render('country');
     this.elem_detectedCountry = $('detectedCountry');
     this.getCountryByAPI();
   }
 
-  showDetectedCountry(countryName) {
+  render(templateName, data) {
+    this.html(this.view(templateName)(data));
+  }
+
+  showDetectedCountryText(countryName) {
     this.country = countryName;
     this.elem_detectedCountry.textContent = countryName;
-    $(`country-yes`).addEventListener(
-      `click`,
-      this.procCountryYes
-    );
-    $(`country-no`).addEventListener(
-      `click`,
-      this.procCountryNo
-    );
+    $(`country-yes`).addEventListener(`click`, this.procCountryYes.bind(this));
+    $(`country-no`).addEventListener(`click`, this.procCountryNo.bind(this));
   }
 
   procCountryYes(e) {
     e.preventDefault();
-    console.log('--------');
-    console.log(e);
-    console.log('--------');
+    this.setChromeSync({ country: this.country }, () => {
+      console.log('---------');
+      console.log(`set success`);
+      console.log('---------');
+      this.showBirthPage();
+    });
   }
 
   procCountryNo(e) {
     e.preventDefault();
-    console.log('--------');
-    console.log(e);
-    console.log('--------');
+    this.showPickCountryPage();
+  }
+
+  showPickCountryPage() {
+    const countries = lifeData.map(elem => elem.country).sort();
+    this.render('pickCountry', {
+      countries,
+    });
+  }
+
+  setChromeSync(value, callback) {
+    chrome.storage.sync.set(value, callback);
+  }
+
+  getChromeSync(key, callback) {
+    chrome.storage.sync.get(key, callback);
   }
 
   getCountryByNavigator() {
     navigator.geolocation.getCurrentPosition(data => {
       const { latitude, longitude } = data.coords;
       let latlng = `${latitude},${longitude}`;
-      fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`
-      )
+      fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`)
         .then(res => res.json())
         .then(json => {
           const results = json.results;
-          const countryLongName =
-            results[results.length - 1].formatted_address;
-          this.showDetectedCountry(countryLongName);
+          const countryLongName = results[results.length - 1].formatted_address;
+          this.showDetectedCountryText(countryLongName);
         });
     });
   }
@@ -112,7 +146,7 @@ class App {
     fetch(`http://ip-api.com/json`)
       .then(data => data.json())
       .then(json => {
-        this.showDetectedCountry(json.country);
+        this.showDetectedCountryText(json.country);
       })
       .catch(error => {
         console.log('---------');
@@ -127,15 +161,12 @@ class App {
   }
 
   renderAgeLoop() {
-    this.interval = setInterval(
-      this.renderAge.bind(this),
-      100
-    );
+    this.interval = setInterval(this.renderAge.bind(this), 100);
   }
 
   renderAge() {
     var now = new Date();
-    var duration = now - this.dateOfBirth;
+    var duration = now - this.birth;
     var years = duration / 31556900000;
 
     var majorMinor = years

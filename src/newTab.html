@@ -21,15 +21,28 @@
     <form>
   </script>
 
-  <script id="dob-template" type="text/x-handlebars-template">
+  <script id="pickCountry-template" type="text/x-handlebars-template">
+    <select id="state" class="pure-input-1-2">
+      {{#each countries}}
+        <option>{{this}}</option>
+      {{/each}}
+    </select>
+  </script>
+
+  <script id="birth-template" type="text/x-handlebars-template">
     <form>
-      <h1 id="dob" class="age-label">When were you born?</h1>
+      <h1 id="birth" class="age-label">When were you born?</h1>
 
       <footer>
-        <input type="date" name="dob" id="dob">
-        <button type="submit">Motivate</button>
+        <input type="date" name="birth" id="birthInput">
+        <button type="submit" id='submitBirth'>submit</button>
       </footer>
     <form>
+  </script>
+
+  <script id="time-template" type="text/x-handlebars-template">
+      <h1>{{country}}</h1>
+      <h2>{{birth}}</h2>
   </script>
 
   <script id="age-template" type="text/x-handlebars-template">
