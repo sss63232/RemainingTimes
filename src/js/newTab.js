@@ -1,4 +1,6 @@
 import Handlebars from './3rd/handlebars';
+// import Handlebars from 'handlebars';
+
 import dayjs from 'dayjs';
 import country_list from 'country-list';
 import lifeData from './life.json';
@@ -6,23 +8,17 @@ import countryByLifeExpectancy from '../../lifeData/country-by-life-expectancy.j
 
 // import Unsplash, { toJson } from 'unsplash-js';
 // import UnsplashHandler from './main/UnsplashHandler';
-
+console.log('--------');
+console.log(Handlebars);
+console.log('--------');
 const $ = document.getElementById.bind(document);
 const $$ = document.querySelectorAll.bind(document);
-
-console.log('---------');
-console.log(countryByLifeExpectancy);
-console.log('---------');
 
 class App {
   constructor($el) {
     this.$el = $el;
-    this.load();
 
-    // this.$el.addEventListener(
-    //   `submit`,
-    //   this.submit.bind(this)
-    // );
+    this.load();
 
     if (this.country) {
       this.renderAgeLoop();
@@ -40,7 +36,8 @@ class App {
   }
 
   save() {
-    if (this.birth) localStorage.dateOfBirth = this.birth.getTime();
+    if (this.birth)
+      localStorage.dateOfBirth = this.birth.getTime();
   }
 
   submit(e) {
@@ -56,13 +53,16 @@ class App {
 
   showBirthPage() {
     this.render('birth');
-    $(`submitBirth`).addEventListener(`click`, this.submitBirth.bind(this));
+    $(`submitBirth`).addEventListener(
+      `click`,
+      this.procSubmitBirth.bind(this)
+    );
 
     // for test
     $(`birthInput`).value = `1993-01-01`;
   }
 
-  submitBirth(e) {
+  procSubmitBirth(e) {
     e.preventDefault();
 
     const birthInputValue = $(`birthInput`).value;
@@ -70,21 +70,24 @@ class App {
       this.birth = birthInputValue;
       this.setChromeSync({ birth: birthInputValue }, () => {
         console.log('---------');
-        console.log(`set birth success`);
+        console.log(`set ${birthInputValue} success`);
         console.log('---------');
       });
-      this.render(`time`, { birth: this.birth, country: this.country });
+      this.showTimePage();
     }
   }
 
-  renderTime() {
-    this.html(this.view(`time`)());
+  showTimePage() {
+    this.render(`time`, {
+      country: this.country,
+      birth: this.birth,
+    });
   }
 
   showCountryPage() {
+    this.getCountryByAPI();
     this.render('country');
     this.elem_detectedCountry = $('detectedCountry');
-    this.getCountryByAPI();
   }
 
   render(templateName, data) {
@@ -94,15 +97,21 @@ class App {
   showDetectedCountryText(countryName) {
     this.country = countryName;
     this.elem_detectedCountry.textContent = countryName;
-    $(`country-yes`).addEventListener(`click`, this.procCountryYes.bind(this));
-    $(`country-no`).addEventListener(`click`, this.procCountryNo.bind(this));
+    $(`country-yes`).addEventListener(
+      `click`,
+      this.procCountryYes.bind(this)
+    );
+    $(`country-no`).addEventListener(
+      `click`,
+      this.procCountryNo.bind(this)
+    );
   }
 
   procCountryYes(e) {
     e.preventDefault();
     this.setChromeSync({ country: this.country }, () => {
       console.log('---------');
-      console.log(`set success`);
+      console.log(`set ${this.country} success`);
       console.log('---------');
       this.showBirthPage();
     });
@@ -114,10 +123,27 @@ class App {
   }
 
   showPickCountryPage() {
-    const countries = lifeData.map(elem => elem.country).sort();
     this.render('pickCountry', {
-      countries,
+      countries: countryByLifeExpectancy
+        .map(elem => elem.country)
+        .sort(),
     });
+    $(`submitCountry`).addEventListener(
+      `click`,
+      this.procSubmitCountry.bind(this)
+    );
+  }
+
+  procSubmitCountry(e) {
+    e.preventDefault();
+    const countrySelectValue = $(`countrySelect`).value;
+    this.country = countrySelectValue;
+    this.setChromeSync({ countrySelectValue }, () => {
+      console.log('--------');
+      console.log(`set country ${countrySelectValue}`);
+      console.log('--------');
+    });
+    this.showBirthPage();
   }
 
   setChromeSync(value, callback) {
@@ -131,13 +157,25 @@ class App {
   getCountryByNavigator() {
     navigator.geolocation.getCurrentPosition(data => {
       const { latitude, longitude } = data.coords;
-      let latlng = `${latitude},${longitude}`;
-      fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`)
+      const latlng = `${latitude},${longitude}`;
+      fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`
+      )
         .then(res => res.json())
         .then(json => {
           const results = json.results;
-          const countryLongName = results[results.length - 1].formatted_address;
+          const countryLongName =
+            results[results.length - 1].formatted_address;
           this.showDetectedCountryText(countryLongName);
+        })
+        .catch(error => {
+          console.log('--------');
+          console.log(
+            `getCountryByNavigator() error`,
+            error
+          );
+          console.log('--------');
+          this.showPickCountryPage();
         });
     });
   }
@@ -150,18 +188,17 @@ class App {
       })
       .catch(error => {
         console.log('---------');
-        console.log(error);
+        console.log(`getCountryByAPI() error`, error);
         console.log('---------');
         this.getCountryByNavigator();
       });
   }
 
-  replaceTextContent(element, txt) {
-    element.textContent = txt;
-  }
-
   renderAgeLoop() {
-    this.interval = setInterval(this.renderAge.bind(this), 100);
+    this.interval = setInterval(
+      this.renderAge.bind(this),
+      100
+    );
   }
 
   renderAge() {
@@ -184,10 +221,6 @@ class App {
         );
       }.bind(this)
     );
-  }
-
-  $$(sel) {
-    return this.$el.querySelectorAll(sel);
   }
 
   html(html) {

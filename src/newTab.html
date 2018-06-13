@@ -22,11 +22,12 @@
   </script>
 
   <script id="pickCountry-template" type="text/x-handlebars-template">
-    <select id="state" class="pure-input-1-2">
+    <select id="countrySelect">
       {{#each countries}}
         <option>{{this}}</option>
       {{/each}}
     </select>
+    <button type="submit" id='submitCountry'>submit</button>
   </script>
 
   <script id="birth-template" type="text/x-handlebars-template">
