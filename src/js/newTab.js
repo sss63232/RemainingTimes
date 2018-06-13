@@ -5,12 +5,17 @@ import lifeData from './life.json';
 // import Unsplash, { toJson } from 'unsplash-js';
 // import UnsplashHandler from './main/UnsplashHandler';
 
+const $ = document.getElementById.bind(document);
+const $$ = document.querySelectorAll.bind(document);
 class App {
   constructor($el) {
     this.$el = $el;
     this.load();
 
-    this.$el.addEventListener(`submit`, this.submit.bind(this));
+    // this.$el.addEventListener(
+    //   `submit`,
+    //   this.submit.bind(this)
+    // );
 
     if (this.country) {
       this.renderAgeLoop();
@@ -28,8 +33,15 @@ class App {
   }
 
   save() {
-    if (this.dateOfBirth) localStorage.dateOfBirth = this.dateOfBirth.getTime();
+    if (this.dateOfBirth)
+      localStorage.dateOfBirth = this.dateOfBirth.getTime();
   }
+
+  setChromeSync(value, callback) {
+    chrome.storage.sync.set(value, callback);
+  }
+
+  getChromeSync()
 
   submit(e) {
     e.preventDefault();
@@ -48,19 +60,50 @@ class App {
 
   renderCountry() {
     this.html(this.view('country')());
+    this.elem_detectedCountry = $('detectedCountry');
     this.getCountryByAPI();
+  }
+
+  showDetectedCountry(countryName) {
+    this.country = countryName;
+    this.elem_detectedCountry.textContent = countryName;
+    $(`country-yes`).addEventListener(
+      `click`,
+      this.procCountryYes
+    );
+    $(`country-no`).addEventListener(
+      `click`,
+      this.procCountryNo
+    );
+  }
+
+  procCountryYes(e) {
+    e.preventDefault();
+    console.log('--------');
+    console.log(e);
+    console.log('--------');
+  }
+
+  procCountryNo(e) {
+    e.preventDefault();
+    console.log('--------');
+    console.log(e);
+    console.log('--------');
   }
 
   getCountryByNavigator() {
     navigator.geolocation.getCurrentPosition(data => {
       const { latitude, longitude } = data.coords;
       let latlng = `${latitude},${longitude}`;
-      fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`)
+      fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`
+      )
         .then(res => res.json())
         .then(json => {
           const results = json.results;
-          const countryLongName = results[results.length - 1].formatted_address;
-          document.getElementById('detectedCountry').textContent = countryLongName;
+          const countryLongName =
+            results[results.length - 1].formatted_address;
+          this.showDetectedCountry(countryLongName);
         });
     });
   }
@@ -69,8 +112,7 @@ class App {
     fetch(`http://ip-api.com/json`)
       .then(data => data.json())
       .then(json => {
-        this.country = json.country;
-        document.getElementById('detectedCountry').textContent = json.country;
+        this.showDetectedCountry(json.country);
       })
       .catch(error => {
         console.log('---------');
@@ -85,7 +127,10 @@ class App {
   }
 
   renderAgeLoop() {
-    this.interval = setInterval(this.renderAge.bind(this), 100);
+    this.interval = setInterval(
+      this.renderAge.bind(this),
+      100
+    );
   }
 
   renderAge() {
@@ -151,8 +196,5 @@ let innerH = window.innerHeight;
 //     let style = document.getElementsByTagName('body')[0].style;
 //     style.backgroundImage = `url('${json.urls.custom}')`;
 //   });
-
-const $ = document.getElementById.bind(document);
-const $$ = document.querySelectorAll.bind(document);
 
 window.app = new App($('app'));
