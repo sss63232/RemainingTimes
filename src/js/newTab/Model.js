@@ -2,9 +2,7 @@ export default class Model {
   constructor() {}
 
   setSyncStorage(obj_value) {
-    return new Promise((res, rej) =>
-      chrome.storage.sync.set(obj_value, () => res())
-    );
+    return new Promise((res, rej) => chrome.storage.sync.set(obj_value, () => res()));
   }
 
   getSyncStorageByKey(key, callback) {
