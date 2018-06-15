@@ -16,8 +16,8 @@ class App {
 
     // model
     //   .getSyncStorageByKeys([`country`, `birth`])
-    //   .then(data => {
-    //     const { country, birth } = data;
+    //   .then(syncData => {
+    //     const { country, birth } = syncData;
     //     if (country && birth) {
     //       this.country = country;
     //       this.birth = birth;
@@ -27,123 +27,23 @@ class App {
     //     }
     //   });
 
-    this.showDetectedCountryPage();
-  }
-
-  showFinalPage() {
-    view.renderTemplate(`final`, {
-      country: this.country,
-      birth: this.birth,
-    });
-  }
-
-  showBirthPage() {
-    view.renderTemplate('birth');
-
-    this.listenElement(`submitBirth`, `click`);
-
-    // for test
-    $(`birthInput`).value = `1993-01-01`;
-  }
-
-  listenElement(id, eventType) {
-    $(id).addEventListener(`click`, this[`${eventType}_${id}_listener`].bind(this));
-  }
-
-  click_submitBirth_listener(e) {
-    e.preventDefault();
-
-    const birthInputValue = $(`birthInput`).value;
-    if (birthInputValue) {
-      this.birth = birthInputValue;
-      model.setSyncStorage({ birth: birthInputValue });
-      this.showFinalPage();
-    }
-  }
-
-  showDetectedCountryPage() {
-    this.getCountryByAPI();
-    view.renderTemplate('country');
-    this.elem_detectedCountry = $('detectedCountry');
-  }
-
-  getCountryByAPI() {
-    fetch(`http://ip-api.com/json`)
-      .then(data => data.json())
-      .then(json => {
-        this.showDetectedCountryText(json.country);
-      })
-      .catch(error => {
-        console.log('---------');
-        console.log(`getCountryByAPI() error`, error);
-        console.log('---------');
-        this.getCountryByNavigator();
-      });
-  }
-
-  getCountryByNavigator() {
-    navigator.geolocation.getCurrentPosition(data => {
-      const { latitude, longitude } = data.coords;
-      const latlng = `${latitude},${longitude}`;
-      fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`)
-        .then(res => res.json())
-        .then(json => {
-          const results = json.results;
-          const countryLongName = results[results.length - 1].formatted_address;
-          this.showDetectedCountryText(countryLongName);
-        })
-        .catch(error => {
-          console.log('--------');
-          console.log(`getCountryByNavigator() error`, error);
-          console.log('--------');
-          this.showPickCountryPage();
-        });
-    });
-  }
-
-  showDetectedCountryText(countryName) {
-    this.country = countryName;
-    this.elem_detectedCountry.textContent = countryName;
-    $(`country-yes`).addEventListener(`click`, this.procCountryYes.bind(this));
-    $(`country-no`).addEventListener(`click`, this.procCountryNo.bind(this));
-  }
-
-  procCountryYes(e) {
-    e.preventDefault();
-    model.setSyncStorage({ country: this.country }).then(() => {
-      console.log('---------');
-      console.log(`set ${this.country} success`);
-      console.log('---------');
-      this.showBirthPage();
-    });
-  }
-
-  procCountryNo(e) {
-    e.preventDefault();
-    this.showPickCountryPage();
-  }
-
-  showPickCountryPage() {
-    view.renderTemplate('pickCountry', {
-      countries: countryByLifeExpectancy.map(elem => elem.country).sort(),
-    });
-    $(`submitCountry`).addEventListener(`click`, this.procSubmitCountry.bind(this));
-  }
-
-  procSubmitCountry(e) {
-    e.preventDefault();
-    const countrySelectValue = $(`countrySelect`).value;
-    this.country = countrySelectValue;
-    model.setSyncStorage({ country: countrySelectValue }).then(() => {
-      console.log('--------');
-      console.log(`set country ${countrySelectValue}`);
-      console.log('--------');
-    });
     this.showBirthPage();
   }
 
-  renderAgeLoop() {
-    this.interval = setInterval(this.renderAge.bind(this), 100);
+  showFinalPage() {
+    const lifeExpectancy = countryByLifeExpectancy.find(
+      elem => elem.country === this.country
+    ).expectancy;
+    this.lifeExpectancy = lifeExpectancy;
+
+    const todayYYYYMMDD = dayjs().format('YYYY-MM-DD');
+    console.log('--------');
+    console.log(dayjs().format('YYYY-MM-DD'));
+    console.log('--------');
+
+    view.renderTemplate(`final`, {
+      today: todayYYYYMMDD,
+    });
   }
 
   renderAge() {
@@ -166,6 +66,135 @@ class App {
         );
       }.bind(this)
     );
+  }
+
+  showBirthPage() {
+    const todayYYYYMMDD = dayjs().format('YYYY-MM-DD');
+    view.renderTemplate('birth', { today: todayYYYYMMDD });
+
+    this.listenElement(`submitBirth`, `click`);
+
+    // for test
+    $(`birthInput`).value = `1993-01-01`;
+  }
+
+  /**
+   * 用來對 Element addEventListener 用的，
+   * lister 固定名稱是 `${eventType}_${id}_listener`
+   *
+   * @param {string} id
+   * @param {string} eventType
+   * @memberof App
+   */
+  listenElement(id, eventType) {
+    $(id).addEventListener(
+      `click`,
+      this[`${eventType}_${id}_listener`].bind(this)
+    );
+  }
+
+  click_submitBirth_listener(e) {
+    e.preventDefault();
+
+    const birthInputValue = $(`birthInput`).value;
+    if (birthInputValue) {
+      this.birth = birthInputValue;
+      model.setSyncStorage({ birth: birthInputValue });
+      this.showFinalPage();
+    }
+  }
+
+  showDetectedCountryPage() {
+    this.getCountryByAPI();
+    view.renderTemplate('country');
+  }
+
+  getCountryByAPI() {
+    fetch(`http://ip-api.com/json`)
+      .then(data => data.json())
+      .then(json => {
+        this.showDetectedCountryText(json.country);
+      })
+      .catch(error => {
+        console.log('---------');
+        console.log(`getCountryByAPI() error`, error);
+        console.log('---------');
+        this.getCountryByNavigator();
+      });
+  }
+
+  getCountryByNavigator() {
+    navigator.geolocation.getCurrentPosition(data => {
+      const { latitude, longitude } = data.coords;
+      const latlng = `${latitude},${longitude}`;
+      fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`
+      )
+        .then(res => res.json())
+        .then(json => {
+          const results = json.results;
+          const countryLongName =
+            results[results.length - 1].formatted_address;
+          this.showDetectedCountryText(countryLongName);
+        })
+        .catch(error => {
+          console.log('--------');
+          console.log(
+            `getCountryByNavigator() error`,
+            error
+          );
+          console.log('--------');
+          this.showPickCountryPage();
+        });
+    });
+  }
+
+  showDetectedCountryText(countryName) {
+    this.country = countryName;
+    $(`detectedCountry`).textContent = countryName;
+
+    this.listenElement(`detectedCountryYes`, `click`);
+    this.listenElement(`detectedCountryYes`, `click`);
+  }
+
+  click_detectedCountryYes_listener(e) {
+    e.preventDefault();
+    model
+      .setSyncStorage({ country: this.country })
+      .then(() => {
+        console.log('---------');
+        console.log(`set ${this.country} success`);
+        console.log('---------');
+        this.showBirthPage();
+      });
+  }
+
+  click_detectedCountryNo_listener(e) {
+    e.preventDefault();
+    this.showPickCountryPage();
+  }
+
+  showPickCountryPage() {
+    view.renderTemplate('pickCountry', {
+      countries: countryByLifeExpectancy
+        .map(elem => elem.country)
+        .sort(),
+    });
+    this.listenElement(`submitCountry`, `click`);
+  }
+
+  click_submitCountry_listener(e) {
+    e.preventDefault();
+    const countrySelectValue = $(`countrySelect`).value;
+    this.country = countrySelectValue;
+    model
+      .setSyncStorage({ country: countrySelectValue })
+      .then(() => {
+        console.log('--------');
+        console.log(`set country ${countrySelectValue}`);
+        console.log('--------');
+      });
+    this.showBirthPage();
   }
 }
 

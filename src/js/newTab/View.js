@@ -4,11 +4,15 @@ export default class View {
   constructor() {}
 
   getCompiledHTML(templateName, Obj_data) {
-    const templateHTML = $(`${templateName}-template`).innerHTML;
+    const templateHTML = $(`${templateName}-template`)
+      .innerHTML;
     return Handlebars.compile(templateHTML)(Obj_data);
   }
 
   renderTemplate(templateName, Obj_data) {
-    $(`app`).innerHTML = this.getCompiledHTML(templateName, Obj_data);
+    $(`app`).innerHTML = this.getCompiledHTML(
+      templateName,
+      Obj_data
+    );
   }
 }

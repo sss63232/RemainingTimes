@@ -8,15 +8,15 @@
 
 <body>
   <div id="app"></div>
-
+  <!-- Latest compiled and minified JavaScript -->
   <script id="country-template" type="text/x-handlebars-template">
     <form>
       <h1 class="country-label">Are you from </h1>
 
       <footer>
         <h2 id='detectedCountry'>{{detectedCountry}}</h2>
-        <button type="submit" id='country-yes'>Yes</button>
-        <button type="submit" id='country-no'>No</button>
+        <button type="submit" id='detectedCountryYes'>Yes</button>
+        <button type="submit" id='detectedCountryNo'>No</button>
       </footer>
     <form>
   </script>
@@ -35,15 +35,15 @@
       <h1 id="birth" class="age-label">When were you born?</h1>
 
       <footer>
-        <input type="date" name="birth" id="birthInput">
+        <input type="date" name="birth" id="birthInput" min="1918-01-01" max="{{today}}" required>
         <button type="submit" id='submitBirth'>submit</button>
       </footer>
     <form>
   </script>
 
   <script id="final-template" type="text/x-handlebars-template">
-      <h1>{{country}}</h1>
-      <h2>{{birth}}</h2>
+    <h1>The rest of your life:</h1>
+    <h1>{{restLifeSec}}</h1>
   </script>
 
   <script id="age-template" type="text/x-handlebars-template">
