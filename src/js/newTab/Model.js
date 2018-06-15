@@ -16,4 +16,10 @@ export default class Model {
       });
     });
   }
+
+  clearSyncStorage() {
+    return new Promise((res, rej) => {
+      chrome.storage.sync.clear(res());
+    });
+  }
 }
