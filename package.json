@@ -28,8 +28,12 @@
     "write-file-webpack-plugin": "3.4.2"
   },
   "dependencies": {
-    "country-list": "^1.1.0",
+    "extract-text-webpack-plugin": "^3.0.2",
     "handlebars": "^4.0.11",
+    "materialize-css": "^1.0.0-rc.1",
+    "node-sass": "^4.9.0",
+    "postcss-loader": "^2.1.5",
+    "sass-loader": "^7.0.3",
     "unsplash-js": "^4.8.0"
   }
 }
