@@ -9,11 +9,27 @@
 
 <body>
   <div id="bg"></div>
-
+  <div id="globalModal"></div>
   <div id="app"></div>
 
-  <script id="country-template" type="text/x-handlebars-template">
+  <script id="modal-template" type="text/x-handlebars-template">
+    <div id='modal' class="active">
+      <header>
+        <h2>{{modalTitle}}</h2>
+      </header>
+      <section>
+        <div class='drop'>
+          <ul class='dropList'>
+            {{#each list}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </section>
+    </div>
+  </script>
 
+  <script id="country-template" type="text/x-handlebars-template">
     <div class="outer">
       <div class="middle">
         <div class="inner">
@@ -32,8 +48,6 @@
         </div>
       </div>
     </div>
-
-
   </script>
 
   <script id="pickCountry-template" type="text/x-handlebars-template">
@@ -69,62 +83,38 @@
 
           <div class="q_content">
 
-            <div id='date_menu'>
-              <div class='drop month'>
-                <span class='title'>
-                  <em>Month</em>
-                  <i class="fa fa-angle-down"></i>
-                </span>
-                <ul class='closed'>
-                  {{#each monthList}}
-                  <li>{{this}}</li>
-                  {{/each}}
-                </ul>
-              </div>
-              <div class='drop day'>
-                <span class='title'>
-                  <em>Day</em>
-                  <i class="fa fa-angle-down"></i>
-                </span>
-                <ul class='closed'>
-                  {{#each dayList}}
-                  <li>{{this}}</li>
-                  {{/each}}
-                </ul>
-              </div>
-              <div class='drop year'>
-                <span class='title'>
-                  <em>Year</em>
-                  <i class="fa fa-angle-down"></i>
-                </span>
-                <ul id='yearList' class='closed'>
+            <div class='drop year'>
+              <span data-drop-type='year' class='title'>
+                <em>Year</em>
+                <i class="fa fa-angle-down"></i>
+              </span>
+              <!-- <ul id='yearList' class='closed'>
                   {{#each yearList}}
                   <li>{{this}}</li>
                   {{/each}}
-                </ul>
-              </div>
+                </ul> -->
             </div>
-
-
-
-
-
-            <div class="modal">
-
-              <header>
-                <h2>Year</h2>
-                <!-- <div class="modal_btn close toggleModal">Close</div> -->
-              </header>
-
-              <section>
-                <div class='drop year'>
-                  <ul id='yearList'>
-                    {{#each yearList}}
-                    <li>{{this}}</li>
-                    {{/each}}
-                  </ul>
-                </div>
-              </section>
+            <div class='drop month'>
+              <span data-drop-type='month' class='title'>
+                <em>Month</em>
+                <i class="fa fa-angle-down"></i>
+              </span>
+              <!-- <ul class='closed'>
+                  {{#each monthList}}
+                  <li>{{this}}</li>
+                  {{/each}}
+                </ul> -->
+            </div>
+            <div class='drop day'>
+              <span data-drop-type='day' class='title'>
+                <em>Day</em>
+                <i class="fa fa-angle-down"></i>
+              </span>
+              <!-- <ul class='closed'>
+                  {{#each dayList}}
+                  <li>{{this}}</li>
+                  {{/each}}
+                </ul> -->
             </div>
 
 

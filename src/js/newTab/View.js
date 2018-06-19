@@ -15,4 +15,10 @@ export default class View {
       Obj_data
     );
   }
+
+  renderModal(Obj_data) {
+    document.getElementById(
+      `globalModal`
+    ).innerHTML = this.getCompiledHTML(`modal`, Obj_data);
+  }
 }

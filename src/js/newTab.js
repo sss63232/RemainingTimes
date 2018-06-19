@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import countryByLifeExpectancy from '../../lifeData/country-by-life-expectancy.json';
 import { $ } from '../js/helpers/helper';
 import Model from './newTab/Model';
+import constData from '../js/helpers/constData';
 
 // import Unsplash, { toJson } from 'unsplash-js';
 // import UnsplashHandler from './main/UnsplashHandler';
@@ -72,123 +73,71 @@ class App {
     setInterval(updateRemainingYear, 1000);
   }
 
-  renderAge() {
-    var now = new Date();
-    var duration = now - this.birth;
-    var years = duration / 31556900000;
-
-    var majorMinor = years
-      .toFixed(9)
-      .toString()
-      .split('.');
-
-    requestAnimationFrame(
-      function() {
-        this.html(
-          this.view('age')({
-            year: majorMinor[0],
-            milliseconds: majorMinor[1],
-          })
-        );
-      }.bind(this)
-    );
-  }
-
   showBirthPage() {
     const todayYYYYMMDD = dayjs().format('YYYY-MM-DD');
-    const dayList = (max => {
-      const list = [];
-      for (let i = 1; i <= max; i++) {
-        list.push(i);
-      }
-      return list;
-    })(31);
-    const yearList = ((min, max) => {
-      const list = [];
-      while (min <= max) {
-        list.push(min);
-        min++;
-      }
-      return list;
-    })(1990, 2018);
     view.renderTemplate('birth', {
       today: todayYYYYMMDD,
-      yearList,
-      dayList,
-      monthList: [
-        `January`,
-        `February`,
-        `March`,
-        `April`,
-        `May`,
-        `June`,
-        `July`,
-        `August`,
-        `September`,
-        `October`,
-        `November`,
-        `December`,
-      ],
     });
 
     this.listenElement(`submitBirth`, `click`);
 
     // for test
     // $(`birthInput`).value = `1993-01-01`;
-
-    /////////////////////////////////////
-    const date_menu = $('date_menu');
-    const ul = date_menu.getElementsByTagName('ul');
-    const li = date_menu.getElementsByTagName('li');
-
-    const titles = date_menu.getElementsByClassName(
-      'title'
-    );
-    [...titles].forEach(title => {
-      title.addEventListener('click', onClick);
-    });
-
-    function onClick() {
-      const siblingUl = this.nextElementSibling;
-      if (siblingUl.classList.contains('closed')) {
-        const opendUl = document.getElementsByClassName(
-          'opened'
-        );
-        [...opendUl].forEach(ul => {
-          ul.classList.add('closed');
-          ul.classList.remove('opened');
+    const titles = document.getElementsByClassName('title');
+    [...titles].forEach(title =>
+      title.addEventListener('click', e => {
+        const type = e.currentTarget.dataset.dropType;
+        view.renderModal({
+          modalTitle: type,
+          list: constData.list[type],
         });
-
-        siblingUl.classList.add('opened');
-        siblingUl.classList.remove('closed');
-      }
-    }
-
-    [...li].forEach(li => {
-      li.addEventListener('click', onClickLi);
-    });
-    function onClickLi() {
-      const parentUl = this.parentNode;
-      const parentDrop = parentUl.parentNode;
-      const titleEm = parentDrop.getElementsByTagName(
-        'em'
-      )[0];
-      parentUl.classList.add('closed');
-      parentUl.classList.remove('opened');
-
-      titleEm.textContent = this.textContent;
-    }
-
-    // $('#date_menu ul li').on('click', function() {
-    //   $(this)
-    //     .parent('ul')
-    //     .switchClass('opened', 'closed')
-    //     .hide()
-    //     .parents('.drop')
-    //     .find('.title em')
-    //     .text($(this).text());
-    // });
+        const dropLists = document.getElementsByClassName(
+          'dropList'
+        );
+        [...dropLists].forEach(dropList => {
+          dropList.addEventListener('click', e => {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('active');
+            console.log('--------');
+            console.log(e.currentTarget);
+            console.log(e.target.textContent);
+            console.log('--------');
+          });
+        });
+      })
+    );
   }
+
+  // function onClick() {
+  //   const siblingUl = this.nextElementSibling;
+  //   if (siblingUl.classList.contains('closed')) {
+  //     const opendUl = document.getElementsByClassName(
+  //       'opened'
+  //     );
+  //     [...opendUl].forEach(ul => {
+  //       ul.classList.add('closed');
+  //       ul.classList.remove('opened');
+  //     });
+
+  //     siblingUl.classList.add('opened');
+  //     siblingUl.classList.remove('closed');
+  //   }
+  // }
+
+  // [...li].forEach(li => {
+  //   li.addEventListener('click', onClickLi);
+  // });
+  // function onClickLi() {
+  //   const parentUl = this.parentNode;
+  //   const parentDrop = parentUl.parentNode;
+  //   const titleEm = parentDrop.getElementsByTagName(
+  //     'em'
+  //   )[0];
+  //   parentUl.classList.add('closed');
+  //   parentUl.classList.remove('opened');
+
+  //   titleEm.textContent = this.textContent;
+  // }
 
   /**
    * 用來對 Element addEventListener 用的，
