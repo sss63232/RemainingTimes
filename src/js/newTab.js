@@ -1,12 +1,9 @@
 import '../css/newTab.scss';
 import config from './helpers/config.js';
 import View from './newTab/View';
-import dayjs from 'dayjs';
 import countryByLifeExpectancy from '../../lifeData/country-by-life-expectancy.json';
-import {
-  getId,
-  getClass,
-} from '../js/helpers/helper';
+import { getId, getClass } from '../js/helpers/helper';
+
 import Model from './newTab/Model';
 import constData from '../js/helpers/constData';
 
@@ -21,6 +18,8 @@ class App {
 
     // this.showBirthPage();
     // this.showDetectedCountryPage();
+    // this.showPickCountryPage();
+
     if (config.cleanStart) {
       model.clearSyncStorage().then(() => {
         this.start();
@@ -31,63 +30,49 @@ class App {
   }
 
   start() {
-    model
-      .getSyncStorageByKeys([`country`, `birth`])
-      .then(syncData => {
-        console.log('---------');
-        console.log(syncData);
-        console.log('---------');
-        const { country, birth } = syncData;
-        if (country && birth) {
-          this.country = country;
-          this.birth = birth;
-          this.showFinalPage();
-        } else {
-          this.showDetectedCountryPage();
-        }
-      });
+    model.getSyncStorageByKeys([`country`, `birth`]).then(syncData => {
+      console.log('---------');
+      console.log(syncData);
+      console.log('---------');
+      const { country, birth } = syncData;
+      if (country && birth) {
+        this.country = country;
+        this.birth = birth;
+        this.showFinalPage();
+      } else {
+        this.showDetectedCountryPage();
+      }
+    });
   }
 
   /**
    * 用來對有 id 的 Element addEventListener 用的，
-   * lister 固定名稱是 `${eventType}_${id}_listener`
+   * lister 固定名稱是 `on_${eventType}_${id}`
    *
    * @param {string} id
    * @param {string} eventType
    * @memberof App
    */
-  listenElement(id, eventType) {
-    getId(id).addEventListener(
-      `click`,
-      this[`${eventType}_${id}_listener`].bind(
-        this
-      )
-    );
+  listenId(id, eventType) {
+    getId(id).addEventListener(eventType, this[`on_${eventType}_${id}`].bind(this));
+  }
+
+  listenClass(className, eventType) {
+    [...getClass].addEventListener(eventType, this[`on_${eventType}_${className}`].bind(this));
   }
 
   showFinalPage() {
-    const lifeExpectancy = countryByLifeExpectancy.find(
-      elem => elem.country === this.country
-    ).expectancy;
+    const lifeExpectancy = countryByLifeExpectancy.find(elem => elem.country === this.country).expectancy;
     const oneYearMS = 365 * 24 * 60 * 60 * 1000;
-    const ts_birth = new Date(
-      this.birth
-    ).getTime();
-    const ts_death =
-      ts_birth + lifeExpectancy * oneYearMS;
+    const ts_birth = new Date(this.birth).getTime();
+    const ts_death = ts_birth + lifeExpectancy * oneYearMS;
 
     const updateRestOfMyLife = () => {
       const ts_now = new Date().getTime();
       const remainingMS = ts_death - ts_now;
-      let remainingYearsSplit = (
-        remainingMS / oneYearMS
-      )
-        .toFixed(10)
-        .split(`.`);
+      let remainingYearsSplit = (remainingMS / oneYearMS).toFixed(10).split(`.`);
 
-      const remainingPercent =
-        (remainingMS / (ts_death - ts_birth)) *
-        100;
+      const remainingPercent = (remainingMS / (ts_death - ts_birth)) * 100;
 
       view.renderTemplate(`final`, {
         integer: remainingYearsSplit[0],
@@ -104,25 +89,21 @@ class App {
   showBirthPage() {
     view.renderTemplate('birth', {});
 
-    this.listenElement(`submitBirth`, `click`);
+    this.listenId(`submitBirth`, `click`);
 
     const titles = getClass('title');
     [...titles].forEach(title =>
       title.addEventListener('click', e => {
-        const type =
-          e.currentTarget.dataset.dropType;
+        const type = e.currentTarget.dataset.dropType;
         view.renderModal({
           modalTitle: type,
           list: constData.list[type],
         });
         const dropList = getClass('dropList')[0];
         dropList.addEventListener('click', e => {
-          getId('modal').classList.remove(
-            'active'
-          );
+          getId('modal').classList.remove('active');
           const value = e.target.textContent;
-          const dropType =
-            e.currentTarget.dataset.dropType;
+          const dropType = e.currentTarget.dataset.dropType;
           this[dropType] = value;
           title.textContent = value;
           title.dataset.dateValue = value;
@@ -131,7 +112,7 @@ class App {
     );
   }
 
-  click_submitBirth_listener(e) {
+  on_click_submitBirth(e) {
     e.preventDefault();
 
     // TODO: 生日沒有輸入的檢查
@@ -141,11 +122,7 @@ class App {
         const dropType = title.dataset.dropType;
         const dateValue = title.dataset.dateValue;
         const isTypeMonth = dropType === `month`;
-        obj[dropType] = isTypeMonth
-          ? constData.list.month.findIndex(
-              elem => elem === dateValue
-            ) + 1
-          : dateValue;
+        obj[dropType] = isTypeMonth ? constData.list.month.findIndex(elem => elem === dateValue) + 1 : dateValue;
       });
       return obj;
     })();
@@ -160,9 +137,7 @@ class App {
         })
         .then(() => {
           console.log('---------');
-          console.log(
-            `set ${birthdayValue} success`
-          );
+          console.log(`set ${birthdayValue} success`);
           console.log('---------');
         });
       this.showFinalPage();
@@ -178,104 +153,107 @@ class App {
     fetch(`http://ip-api.com/json`)
       .then(data => data.json())
       .then(json => {
-        this.showDetectedCountryText(
-          json.country
-        );
+        this.showDetectedCountryText(json.country);
       })
       .catch(error => {
         console.log('---------');
-        console.log(
-          `getCountryByAPI() error`,
-          error
-        );
+        console.log(`getCountryByAPI() error`, error);
         console.log('---------');
         this.getCountryByNavigator();
       });
   }
 
   getCountryByNavigator() {
-    navigator.geolocation.getCurrentPosition(
-      data => {
-        const {
-          latitude,
-          longitude,
-        } = data.coords;
-        const latlng = `${latitude},${longitude}`;
-        fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`
-        )
-          .then(res => res.json())
-          .then(json => {
-            const results = json.results;
-            const countryLongName =
-              results[results.length - 1]
-                .formatted_address;
-            this.showDetectedCountryText(
-              countryLongName
-            );
-          })
-          .catch(error => {
-            console.log('--------');
-            console.log(
-              `getCountryByNavigator() error`,
-              error
-            );
-            console.log('--------');
-            this.showPickCountryPage();
-          });
-      }
-    );
+    navigator.geolocation.getCurrentPosition(data => {
+      const { latitude, longitude } = data.coords;
+      const latlng = `${latitude},${longitude}`;
+      fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`)
+        .then(res => res.json())
+        .then(json => {
+          const results = json.results;
+          const countryLongName = results[results.length - 1].formatted_address;
+          this.showDetectedCountryText(countryLongName);
+        })
+        .catch(error => {
+          console.log('--------');
+          console.log(`getCountryByNavigator() error`, error);
+          console.log('--------');
+          this.showPickCountryPage();
+        });
+    });
   }
 
   showDetectedCountryText(countryName) {
     this.country = countryName;
-    getId(
-      `detectedCountry`
-    ).textContent = countryName;
+    getId(`detectedCountry`).textContent = countryName;
 
-    this.listenElement(
-      `detectedCountryYes`,
-      `click`
-    );
-    this.listenElement(
-      `detectedCountryNo`,
-      `click`
-    );
+    this.listenId(`detectedCountryYes`, `click`);
+    this.listenId(`detectedCountryNo`, `click`);
   }
 
-  click_detectedCountryYes_listener(e) {
+  on_click_detectedCountryYes(e) {
     e.preventDefault();
     model
-      .setSyncStorage({ country: this.country })
+      .setSyncStorage({
+        country: this.country,
+      })
       .then(() => {
         console.log('---------');
-        console.log(
-          `setgetId{this.country} success`
-        );
+        console.log(`setgetId{this.country} success`);
         console.log('---------');
         this.showBirthPage();
       });
   }
 
-  click_detectedCountryNo_listener(e) {
+  on_click_detectedCountryNo(e) {
     e.preventDefault();
     this.showPickCountryPage();
   }
 
   showPickCountryPage() {
-    view.renderTemplate('pickCountry', {
-      countries: countryByLifeExpectancy
-        .map(elem => elem.country)
-        .sort(),
-    });
-    this.listenElement(`submitCountry`, `click`);
+    const countries = countryByLifeExpectancy.map(elem => elem.country).sort();
+    view.renderTemplate('pickCountry', {});
+    this.listenId(`submitCountry`, `click`);
+
+    const titles = getClass('title');
+    [...titles].forEach(title =>
+      title.addEventListener('click', e => {
+        const type = e.currentTarget.dataset.dropType;
+        view.renderModal({
+          modalTitle: type,
+          list: countries,
+        });
+        const dropList = getClass('dropList')[0];
+        dropList.addEventListener('click', e => {
+          getId('modal').classList.remove('active');
+          const value = e.target.textContent;
+          const dropType = e.currentTarget.dataset.dropType;
+          this[dropType] = value;
+          title.textContent = value;
+          title.dataset.dateValue = value;
+        });
+      })
+    );
   }
 
-  click_submitCountry_listener(e) {
+  on_click_submitCountry(e) {
     e.preventDefault();
-    const countrySelectValue = getId(
-      `countrySelect`
-    ).value;
+
+    // TODO: 國家沒有輸入的檢查
+    const dropValueObj = (() => {
+      let obj = {};
+      [...getClass(`title`)].forEach(title => {
+        const dropType = title.dataset.dropType;
+        const dateValue = title.dataset.dateValue;
+        obj[dropType] = dateValue;
+      });
+      return obj;
+    })();
+    console.log('---------');
+    console.log(dropValueObj);
+    console.log('---------');
+
+    const countrySelectValue = dropValueObj.country;
     this.country = countrySelectValue;
     model
       .setSyncStorage({
@@ -283,9 +261,7 @@ class App {
       })
       .then(() => {
         console.log('--------');
-        console.log(
-          `set countrygetId{countrySelectValue}`
-        );
+        console.log(`set countrygetId{countrySelectValue}`);
         console.log('--------');
       });
     this.showBirthPage();

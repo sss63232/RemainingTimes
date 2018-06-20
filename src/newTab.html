@@ -56,11 +56,17 @@
         <div class="inner">
           <span class="q_title">Hey, are you from </span>
           <div class="q_content">
-            <select id="countrySelect">
+            <div class='drop year'>
+              <span data-drop-type='country' class='title'>
+                country
+                <i class="fa fa-angle-down"></i>
+              </span>
+            </div>
+{{!--             <select id="countrySelect">
               {{#each countries}}
               <option>{{this}}</option>
               {{/each}}
-            </select>
+            </select> --}}
           </div>
           <div class='btnArea'>
             <div id='submitCountry' class="button">

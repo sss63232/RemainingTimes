@@ -1,10 +1,17 @@
-{
-  "extends": [
+module.exports={
+  //此項是用來告訴eslint找當前配置文件不能往父級查找
+  root: true,
+  // 此項是用來配置標準的js風格，
+  extends: [
     "eslint:recommended",
     "prettier"
   ],
-  "parser": "babel-eslint",
-  "parserOptions": {
+  plugins: [
+    "prettier"
+  ],
+  //此項是用來指定eslint解析器的，解析器必須符合規則，babel-eslint解析器是對babel解析器的包裝使其與ESLint解析
+  parser: "babel-eslint",
+  parserOptions: {
     "ecmaVersion": 8,
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
@@ -12,13 +19,18 @@
       "classes": true
     }
   },
-  "env": {
+  //此項指定環境的全局變量，有一些預設環境可以選擇
+  env: {
     "browser": true,
     "node": true,
     "jquery": true,
     "webextensions": true
   },
-  "rules": {
+  // 自訂規則
+  // "off" -> 0 關閉規則
+  // "warn" -> 1 開啟警告規則
+  // "error" -> 2 開啟錯誤規則
+  rules: {
     "semi": [
       2,
       "always"
@@ -38,6 +50,7 @@
       }
     ],
     "prettier/prettier": [
+      // customizing prettier rules (unfortunately not many of them are customizable)
       "error",
       {
         "trailingComma": "es5",
@@ -45,8 +58,5 @@
         "printWidth": 120
       }
     ]
-  },
-  "plugins": [
-    "prettier"
-  ]
-}
+  }
+};
