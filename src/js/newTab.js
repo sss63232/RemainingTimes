@@ -1,9 +1,12 @@
 import '../css/newTab.scss';
-
+import config from './helpers/config.js';
 import View from './newTab/View';
 import dayjs from 'dayjs';
 import countryByLifeExpectancy from '../../lifeData/country-by-life-expectancy.json';
-import { $ } from '../js/helpers/helper';
+import {
+  getId,
+  getClass,
+} from '../js/helpers/helper';
 import Model from './newTab/Model';
 import constData from '../js/helpers/constData';
 
@@ -13,134 +16,40 @@ import constData from '../js/helpers/constData';
 const view = new View();
 const model = new Model();
 class App {
-  constructor($el) {
-    this.$el = $el;
+  constructor(elem) {
+    this.elem = elem;
 
-    this.showBirthPage();
+    // this.showBirthPage();
     // this.showDetectedCountryPage();
-
-    // model.clearSyncStorage().then(() => {
-    // model
-    //   .getSyncStorageByKeys([`country`, `birth`])
-    //   .then(syncData => {
-    //     console.log('---------');
-    //     console.log(syncData);
-    //     console.log('---------');
-    //     const { country, birth } = syncData;
-    //     if (country && birth) {
-    //       this.country = country;
-    //       this.birth = birth;
-    //       this.showFinalPage();
-    //     } else {
-    //       this.showDetectedCountryPage();
-    //     }
-    //   });
-    // });
-  }
-
-  showFinalPage() {
-    const lifeExpectancy = countryByLifeExpectancy.find(
-      elem => elem.country === this.country
-    ).expectancy;
-    const oneYearSeconds = 365 * 24 * 60 * 60;
-    const birthSec = Math.floor(
-      new Date(this.birth).getTime() / 1000
-    );
-    const dieSec =
-      birthSec + lifeExpectancy * oneYearSeconds;
-
-    const updateRemainingYear = () => {
-      const nowSec = Math.floor(
-        new Date().getTime() / 1000
-      );
-      const remainingSec = dieSec - nowSec;
-      let remainingYear = remainingSec / oneYearSeconds;
-      remainingYear = remainingYear.toFixed(10).split(`.`);
-
-      const remainingPercent =
-        (remainingSec / (dieSec - birthSec)) * 100;
-
-      view.renderTemplate(`final`, {
-        remainingYear0: remainingYear[0],
-        remainingYear1: remainingYear[1],
-        remainingPercent,
+    if (config.cleanStart) {
+      model.clearSyncStorage().then(() => {
+        this.start();
       });
-
-      requestAnimationFrame(updateRemainingYear);
-    };
-
-    // requestAnimationFrame(updateRemainingYear);
-    setInterval(updateRemainingYear, 1000);
+    } else {
+      this.start();
+    }
   }
 
-  showBirthPage() {
-    const todayYYYYMMDD = dayjs().format('YYYY-MM-DD');
-    view.renderTemplate('birth', {
-      today: todayYYYYMMDD,
-    });
-
-    this.listenElement(`submitBirth`, `click`);
-
-    // for test
-    // $(`birthInput`).value = `1993-01-01`;
-    const titles = document.getElementsByClassName('title');
-    [...titles].forEach(title =>
-      title.addEventListener('click', e => {
-        const type = e.currentTarget.dataset.dropType;
-        view.renderModal({
-          modalTitle: type,
-          list: constData.list[type],
-        });
-        const dropLists = document.getElementsByClassName(
-          'dropList'
-        );
-        [...dropLists].forEach(dropList => {
-          dropList.addEventListener('click', e => {
-            const modal = document.getElementById('modal');
-            modal.classList.remove('active');
-            console.log('--------');
-            console.log(e.currentTarget);
-            console.log(e.target.textContent);
-            console.log('--------');
-          });
-        });
-      })
-    );
+  start() {
+    model
+      .getSyncStorageByKeys([`country`, `birth`])
+      .then(syncData => {
+        console.log('---------');
+        console.log(syncData);
+        console.log('---------');
+        const { country, birth } = syncData;
+        if (country && birth) {
+          this.country = country;
+          this.birth = birth;
+          this.showFinalPage();
+        } else {
+          this.showDetectedCountryPage();
+        }
+      });
   }
-
-  // function onClick() {
-  //   const siblingUl = this.nextElementSibling;
-  //   if (siblingUl.classList.contains('closed')) {
-  //     const opendUl = document.getElementsByClassName(
-  //       'opened'
-  //     );
-  //     [...opendUl].forEach(ul => {
-  //       ul.classList.add('closed');
-  //       ul.classList.remove('opened');
-  //     });
-
-  //     siblingUl.classList.add('opened');
-  //     siblingUl.classList.remove('closed');
-  //   }
-  // }
-
-  // [...li].forEach(li => {
-  //   li.addEventListener('click', onClickLi);
-  // });
-  // function onClickLi() {
-  //   const parentUl = this.parentNode;
-  //   const parentDrop = parentUl.parentNode;
-  //   const titleEm = parentDrop.getElementsByTagName(
-  //     'em'
-  //   )[0];
-  //   parentUl.classList.add('closed');
-  //   parentUl.classList.remove('opened');
-
-  //   titleEm.textContent = this.textContent;
-  // }
 
   /**
-   * 用來對 Element addEventListener 用的，
+   * 用來對有 id 的 Element addEventListener 用的，
    * lister 固定名稱是 `${eventType}_${id}_listener`
    *
    * @param {string} id
@@ -148,23 +57,112 @@ class App {
    * @memberof App
    */
   listenElement(id, eventType) {
-    $(id).addEventListener(
+    getId(id).addEventListener(
       `click`,
-      this[`${eventType}_${id}_listener`].bind(this)
+      this[`${eventType}_${id}_listener`].bind(
+        this
+      )
+    );
+  }
+
+  showFinalPage() {
+    const lifeExpectancy = countryByLifeExpectancy.find(
+      elem => elem.country === this.country
+    ).expectancy;
+    const oneYearMS = 365 * 24 * 60 * 60 * 1000;
+    const ts_birth = new Date(
+      this.birth
+    ).getTime();
+    const ts_death =
+      ts_birth + lifeExpectancy * oneYearMS;
+
+    const updateRestOfMyLife = () => {
+      const ts_now = new Date().getTime();
+      const remainingMS = ts_death - ts_now;
+      let remainingYearsSplit = (
+        remainingMS / oneYearMS
+      )
+        .toFixed(10)
+        .split(`.`);
+
+      const remainingPercent =
+        (remainingMS / (ts_death - ts_birth)) *
+        100;
+
+      view.renderTemplate(`final`, {
+        integer: remainingYearsSplit[0],
+        fraction: remainingYearsSplit[1],
+        remainingPercent,
+      });
+
+      requestAnimationFrame(updateRestOfMyLife);
+    };
+
+    setInterval(updateRestOfMyLife, 1000);
+  }
+
+  showBirthPage() {
+    view.renderTemplate('birth', {});
+
+    this.listenElement(`submitBirth`, `click`);
+
+    const titles = getClass('title');
+    [...titles].forEach(title =>
+      title.addEventListener('click', e => {
+        const type =
+          e.currentTarget.dataset.dropType;
+        view.renderModal({
+          modalTitle: type,
+          list: constData.list[type],
+        });
+        const dropList = getClass('dropList')[0];
+        dropList.addEventListener('click', e => {
+          getId('modal').classList.remove(
+            'active'
+          );
+          const value = e.target.textContent;
+          const dropType =
+            e.currentTarget.dataset.dropType;
+          this[dropType] = value;
+          title.textContent = value;
+          title.dataset.dateValue = value;
+        });
+      })
     );
   }
 
   click_submitBirth_listener(e) {
     e.preventDefault();
 
-    const birthInputValue = $(`birthInput`).value;
-    if (birthInputValue) {
-      this.birth = birthInputValue;
+    // TODO: 生日沒有輸入的檢查
+    const dropValueObj = (() => {
+      let obj = {};
+      [...getClass(`title`)].forEach(title => {
+        const dropType = title.dataset.dropType;
+        const dateValue = title.dataset.dateValue;
+        const isTypeMonth = dropType === `month`;
+        obj[dropType] = isTypeMonth
+          ? constData.list.month.findIndex(
+              elem => elem === dateValue
+            ) + 1
+          : dateValue;
+      });
+      return obj;
+    })();
+
+    const { year, month, day } = dropValueObj;
+    const birthdayValue = `${year}/${month}/${day}`;
+    if (birthdayValue) {
+      this.birth = birthdayValue;
       model
-        .setSyncStorage({ birth: birthInputValue })
+        .setSyncStorage({
+          birth: birthdayValue,
+        })
         .then(() => {
           console.log('---------');
-          console.log(`set ${birthInputValue} success`);
+          console.log(
+            `set ${birthdayValue} success`
+          );
           console.log('---------');
         });
       this.showFinalPage();
@@ -180,48 +178,69 @@ class App {
     fetch(`http://ip-api.com/json`)
       .then(data => data.json())
       .then(json => {
-        this.showDetectedCountryText(json.country);
+        this.showDetectedCountryText(
+          json.country
+        );
       })
       .catch(error => {
         console.log('---------');
-        console.log(`getCountryByAPI() error`, error);
+        console.log(
+          `getCountryByAPI() error`,
+          error
+        );
         console.log('---------');
         this.getCountryByNavigator();
       });
   }
 
   getCountryByNavigator() {
-    navigator.geolocation.getCurrentPosition(data => {
-      const { latitude, longitude } = data.coords;
-      const latlng = `${latitude},${longitude}`;
-      fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`
-      )
-        .then(res => res.json())
-        .then(json => {
-          const results = json.results;
-          const countryLongName =
-            results[results.length - 1].formatted_address;
-          this.showDetectedCountryText(countryLongName);
-        })
-        .catch(error => {
-          console.log('--------');
-          console.log(
-            `getCountryByNavigator() error`,
-            error
-          );
-          console.log('--------');
-          this.showPickCountryPage();
-        });
-    });
+    navigator.geolocation.getCurrentPosition(
+      data => {
+        const {
+          latitude,
+          longitude,
+        } = data.coords;
+        const latlng = `${latitude},${longitude}`;
+        fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}`
+        )
+          .then(res => res.json())
+          .then(json => {
+            const results = json.results;
+            const countryLongName =
+              results[results.length - 1]
+                .formatted_address;
+            this.showDetectedCountryText(
+              countryLongName
+            );
+          })
+          .catch(error => {
+            console.log('--------');
+            console.log(
+              `getCountryByNavigator() error`,
+              error
+            );
+            console.log('--------');
+            this.showPickCountryPage();
+          });
+      }
+    );
   }
 
   showDetectedCountryText(countryName) {
     this.country = countryName;
-    $(`detectedCountry`).textContent = countryName;
+    getId(
+      `detectedCountry`
+    ).textContent = countryName;
 
-    this.listenElement(`detectedCountryYes`, `click`);
-    this.listenElement(`detectedCountryNo`, `click`);
+    this.listenElement(
+      `detectedCountryYes`,
+      `click`
+    );
+    this.listenElement(
+      `detectedCountryNo`,
+      `click`
+    );
   }
 
   click_detectedCountryYes_listener(e) {
@@ -230,7 +249,9 @@ class App {
       .setSyncStorage({ country: this.country })
       .then(() => {
         console.log('---------');
-        console.log(`set ${this.country} success`);
+        console.log(
+          `setgetId{this.country} success`
+        );
         console.log('---------');
         this.showBirthPage();
       });
@@ -252,13 +273,19 @@ class App {
 
   click_submitCountry_listener(e) {
     e.preventDefault();
-    const countrySelectValue = $(`countrySelect`).value;
+    const countrySelectValue = getId(
+      `countrySelect`
+    ).value;
     this.country = countrySelectValue;
     model
-      .setSyncStorage({ country: countrySelectValue })
+      .setSyncStorage({
+        country: countrySelectValue,
+      })
       .then(() => {
         console.log('--------');
-        console.log(`set country ${countrySelectValue}`);
+        console.log(
+          `set countrygetId{countrySelectValue}`
+        );
         console.log('--------');
       });
     this.showBirthPage();
@@ -287,4 +314,4 @@ let innerH = window.innerHeight;
 //     style.backgroundImage = `url('${json.urls.custom}')`;
 //   });
 
-window.app = new App($('app'));
+window.app = new App(getId('app'));

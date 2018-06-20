@@ -1,16 +1,19 @@
 import Handlebars from 'handlebars/dist/handlebars';
-import { $ } from '../helpers/helper';
+import { getId } from '../helpers/helper';
 export default class View {
   constructor() {}
 
   getCompiledHTML(templateName, Obj_data) {
-    const templateHTML = $(`${templateName}-template`)
-      .innerHTML;
-    return Handlebars.compile(templateHTML)(Obj_data);
+    const templateHTML = getId(
+      `${templateName}-template`
+    ).innerHTML;
+    return Handlebars.compile(templateHTML)(
+      Obj_data
+    );
   }
 
   renderTemplate(templateName, Obj_data) {
-    $(`app`).innerHTML = this.getCompiledHTML(
+    getId(`app`).innerHTML = this.getCompiledHTML(
       templateName,
       Obj_data
     );
@@ -19,6 +22,9 @@ export default class View {
   renderModal(Obj_data) {
     document.getElementById(
       `globalModal`
-    ).innerHTML = this.getCompiledHTML(`modal`, Obj_data);
+    ).innerHTML = this.getCompiledHTML(
+      `modal`,
+      Obj_data
+    );
   }
 }

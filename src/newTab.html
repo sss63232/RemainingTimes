@@ -19,7 +19,7 @@
       </header>
       <section>
         <div class='drop'>
-          <ul class='dropList'>
+          <ul class='dropList' data-drop-type='{{modalTitle}}'>
             {{#each list}}
             <li>{{this}}</li>
             {{/each}}
@@ -78,59 +78,32 @@
       <div class="middle">
         <div class="inner">
           <span class="q_title">What's your birthday? </span>
-
-          <!-- <input type="date" name="birth" id="birthInput" min="1918-01-01" max="{{today}}" required> -->
-
           <div class="q_content">
-
             <div class='drop year'>
               <span data-drop-type='year' class='title'>
-                <em>Year</em>
+                Year
                 <i class="fa fa-angle-down"></i>
               </span>
-              <!-- <ul id='yearList' class='closed'>
-                  {{#each yearList}}
-                  <li>{{this}}</li>
-                  {{/each}}
-                </ul> -->
             </div>
             <div class='drop month'>
               <span data-drop-type='month' class='title'>
-                <em>Month</em>
+                Month
                 <i class="fa fa-angle-down"></i>
               </span>
-              <!-- <ul class='closed'>
-                  {{#each monthList}}
-                  <li>{{this}}</li>
-                  {{/each}}
-                </ul> -->
             </div>
             <div class='drop day'>
               <span data-drop-type='day' class='title'>
-                <em>Day</em>
+                Day
                 <i class="fa fa-angle-down"></i>
               </span>
-              <!-- <ul class='closed'>
-                  {{#each dayList}}
-                  <li>{{this}}</li>
-                  {{/each}}
-                </ul> -->
             </div>
-
-
           </div>
-
-
-
-
 
           <div class="btnArea">
             <div id='submitBirth' class="button">
               submit
             </div>
           </div>
-
-
 
         </div>
       </div>
@@ -139,8 +112,8 @@
 
   <script id="final-template" type="text/x-handlebars-template">
     <h1>The rest of your life:</h1>
-    <h1>{{remainingYear0}}</h1>
-    <h1>{{remainingYear1}}</h1>
+    <h1>{{integer}}</h1>
+    <h1>{{fraction}}</h1>
     <h1>{{remainingPercent}}</h1>
   </script>
 
