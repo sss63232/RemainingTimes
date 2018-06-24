@@ -5,6 +5,7 @@ var webpack = require('webpack'),
   CleanWebpackPlugin = require('clean-webpack-plugin'),
   CopyWebpackPlugin = require('copy-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
+  FontelloPlugin = require('fontello-webpack-plugin'),
   WriteFilePlugin = require('write-file-webpack-plugin');
 
 // load the secrets
@@ -34,8 +35,18 @@ if (fileSystem.existsSync(secretsPath)) {
 
 var options = {
   entry: {
-    popup: path.join(__dirname, 'src', 'js', 'popup.js'),
-    newTab: path.join(__dirname, 'src', 'js', 'newTab.js'),
+    popup: path.join(
+      __dirname,
+      'src',
+      'js',
+      'popup.js'
+    ),
+    newTab: path.join(
+      __dirname,
+      'src',
+      'js',
+      'newTab.js'
+    ),
     background: path.join(
       __dirname,
       'src',
@@ -67,7 +78,6 @@ var options = {
             },
           },
         ],
-        exclude: /node_modules/,
       },
       {
         test: new RegExp(
@@ -91,7 +101,13 @@ var options = {
     new CleanWebpackPlugin(['build']),
     // expose and write the allowed env vars on the compiled bundle
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV),
+      'process.env.NODE_ENV': JSON.stringify(
+        env.NODE_ENV
+      ),
+    }),
+    new FontelloPlugin({
+      config: require('./src/img/fontello/config.json'),
+      /* ...options */
     }),
     new CopyWebpackPlugin([
       {
@@ -101,8 +117,10 @@ var options = {
           return Buffer.from(
             JSON.stringify({
               description:
-                process.env.npm_package_description,
-              version: process.env.npm_package_version,
+                process.env
+                  .npm_package_description,
+              version:
+                process.env.npm_package_version,
               ...JSON.parse(content.toString()),
             })
           );
@@ -110,12 +128,20 @@ var options = {
       },
     ]),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'popup.html'),
+      template: path.join(
+        __dirname,
+        'src',
+        'popup.html'
+      ),
       filename: 'popup.html',
       chunks: ['popup'],
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'newTab.html'),
+      template: path.join(
+        __dirname,
+        'src',
+        'newTab.html'
+      ),
       filename: 'newTab.html',
       chunks: ['newTab'],
     }),

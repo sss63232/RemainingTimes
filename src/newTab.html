@@ -5,9 +5,11 @@
   <meta charset="UTF-8">
   <title></title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <!-- <link rel="stylesheet" href="./css/fontello/css/fontello.css"> -->
 </head>
 
 <body>
+  <div class="icon-down-open-big"></div>
   <div id="bg"></div>
   <div id="globalModal"></div>
   <div id="app"></div>
@@ -15,7 +17,8 @@
   <script id="modal-template" type="text/x-handlebars-template">
     <div id='modal' class="active">
       <header>
-        <h2>{{modalTitle}}</h2>
+        <h2 class='modal_title'>{{modalTitle}}</h2>
+        <span class='modal_close'>close</span>
       </header>
       <section>
         <div class='drop'>
@@ -62,11 +65,6 @@
                 <i class="fa fa-angle-down"></i>
               </span>
             </div>
-{{!--             <select id="countrySelect">
-              {{#each countries}}
-              <option>{{this}}</option>
-              {{/each}}
-            </select> --}}
           </div>
           <div class='btnArea'>
             <div id='submitCountry' class="button">
@@ -85,22 +83,19 @@
         <div class="inner">
           <span class="q_title">What's your birthday? </span>
           <div class="q_content">
-            <div class='drop year'>
-              <span data-drop-type='year' class='title'>
-                Year
-                <i class="fa fa-angle-down"></i>
+            <div class='drop'>
+              <span data-drop-type='year' class='title'>Year
+                <i class="icon-down-open-big"></i>
               </span>
             </div>
-            <div class='drop month'>
-              <span data-drop-type='month' class='title'>
-                Month
-                <i class="fa fa-angle-down"></i>
+            <div class='drop'>
+              <span data-drop-type='month' class='title'>Month
+                <i class="icon-down-open-big"></i>
               </span>
             </div>
-            <div class='drop day'>
-              <span data-drop-type='day' class='title'>
-                Day
-                <i class="fa fa-angle-down"></i>
+            <div class='drop'>
+              <span data-drop-type='day' class='title'>Day
+                <i class="icon-down-open-big"></i>
               </span>
             </div>
           </div>
