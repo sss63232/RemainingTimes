@@ -17,18 +17,50 @@
   <script id="modal-template" type="text/x-handlebars-template">
     <div id='modal' class="active">
       <header>
-        <h2 class='modal_title'>{{modalTitle}}</h2>
+        <div class='q_title modal_title '>{{modalTitle}}</div>
         <span class='modal_close'>close</span>
       </header>
       <section>
-        <div class='drop'>
-          <ul class='dropList' data-drop-type='{{modalTitle}}'>
-            {{#each list}}
-            <li>{{this}}</li>
-            {{/each}}
-          </ul>
-        </div>
+        <ul class='dropList' data-drop-type='{{modalTitle}}'>
+          {{#each list}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
       </section>
+    </div>
+  </script>
+
+  <script id="birth-template" type="text/x-handlebars-template">
+    <div class="outer">
+      <div class="middle">
+        <div class="inner">
+          <span class="q_title">What's your birthday? </span>
+          <div class="q_content">
+            <div class='drop'>
+              <span data-drop-type='year' class='title'>Year
+                <i class="icon-down-open-big"></i>
+              </span>
+            </div>
+            <div class='drop'>
+              <span data-drop-type='month' class='title'>Month
+                <i class="icon-down-open-big"></i>
+              </span>
+            </div>
+            <div class='drop'>
+              <span data-drop-type='day' class='title'>Day
+                <i class="icon-down-open-big"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="btnArea">
+            <div id='submitBirth' class="button">
+              submit
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
   </script>
 
@@ -71,45 +103,12 @@
               submit
             </div>
           </div>
-
         </div>
       </div>
     </div>
   </script>
 
-  <script id="birth-template" type="text/x-handlebars-template">
-    <div class="outer">
-      <div class="middle">
-        <div class="inner">
-          <span class="q_title">What's your birthday? </span>
-          <div class="q_content">
-            <div class='drop'>
-              <span data-drop-type='year' class='title'>Year
-                <i class="icon-down-open-big"></i>
-              </span>
-            </div>
-            <div class='drop'>
-              <span data-drop-type='month' class='title'>Month
-                <i class="icon-down-open-big"></i>
-              </span>
-            </div>
-            <div class='drop'>
-              <span data-drop-type='day' class='title'>Day
-                <i class="icon-down-open-big"></i>
-              </span>
-            </div>
-          </div>
 
-          <div class="btnArea">
-            <div id='submitBirth' class="button">
-              submit
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </script>
 
   <script id="final-template" type="text/x-handlebars-template">
     <h1>The rest of your life:</h1>

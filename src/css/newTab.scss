@@ -66,17 +66,18 @@ html {
 }
 
 .q_content {
-  margin: 3rem;
+  margin: 4rem;
+  span{
+    font-size: 6rem;
+    line-height: 6rem;
+    text-decoration: underline;
+    // border-bottom: 2px solid #ffffff;
+  }
 }
 
 .btnArea {
   margin: 3rem;
   font-size: 1.5rem;
-}
-
-#detectedCountry {
-  border-bottom: 2px solid #ffffff;
-  font-size: 6rem;
 }
 
 .button {
@@ -103,47 +104,25 @@ html {
   display: inline-block;
   margin-right: .5rem;
   .title {
+    text-transform: uppercase;
     cursor: pointer;
-    display: block;
-    border-bottom: .5px solid #ffffff;
     &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.7);
+      background-color: rgba(255, 255, 255, 0.4);
+      // border-color: rgba(255, 255, 255, 0.7);
     }
     i {
-      color: #666666;
+      font-size: 3rem;
     }
   }
 }
 
-ul {
-  // position: absolute;
-  // top: 2rem;
-  max-height: 10rem;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  &.closed {
-    display: none;
-  }
-  li {
-    cursor: pointer;
-    list-style: none;
-    line-height: 2rem;
-    text-align: center;
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-  }
-}
 
-////////////////////////////////@at-root
+
+////////////////////////////////
 $blue: #007aff;
 $green: #4dd865;
 $red: #ff3b30;
 #modal {
-  // display: none;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -152,7 +131,7 @@ $red: #ff3b30;
   margin-left: -200px;
   margin-top: -150px;
   background-color: rgba(255, 255, 255, 0.8);
-  padding: 25px;
+  padding: 4rem;
   z-index: $modal_z;
   box-shadow: 0 0 0 3000px rgba(0, 0, 0, 0.5);
   &.hide {
@@ -160,7 +139,7 @@ $red: #ff3b30;
   }
   .modal_title {
     text-align: center;
-    position: relative;
+    text-transform: uppercase;
   }
   .modal_close {
     position: absolute;
@@ -171,8 +150,31 @@ $red: #ff3b30;
     padding: 1rem;
     border: .5px solid;
     &:hover {
-      text-decoration: underline;
-      background-color: rgba(255, 255, 255, 0.8);
+      background-color: $hoverBgColor;
+    }
+  }
+
+  ul {
+    max-height: 10rem;
+    overflow: auto;
+    padding: 0px;
+    margin-top: 2rem;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    &.closed {
+      display: none;
+    }
+    li {
+      cursor: pointer;
+      list-style: none;
+      line-height: 2rem;
+      font-size: 2rem;
+      margin: 1rem;
+      text-align: center;
+      &:hover {
+        background-color: $hoverBgColor;
+      }
     }
   }
 }
