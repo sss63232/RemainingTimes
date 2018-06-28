@@ -67,11 +67,10 @@ html {
 
 .q_content {
   margin: 4rem;
-  span{
+  span {
     font-size: 6rem;
     line-height: 6rem;
-    text-decoration: underline;
-    // border-bottom: 2px solid #ffffff;
+    text-decoration: underline; // border-bottom: 2px solid #ffffff;
   }
 }
 
@@ -107,16 +106,13 @@ html {
     text-transform: uppercase;
     cursor: pointer;
     &:hover {
-      background-color: rgba(255, 255, 255, 0.4);
-      // border-color: rgba(255, 255, 255, 0.7);
+      background-color: rgba(255, 255, 255, 0.4); // border-color: rgba(255, 255, 255, 0.7);
     }
     i {
       font-size: 3rem;
     }
   }
 }
-
-
 
 ////////////////////////////////
 $blue: #007aff;
@@ -153,7 +149,6 @@ $red: #ff3b30;
       background-color: $hoverBgColor;
     }
   }
-
   ul {
     max-height: 10rem;
     overflow: auto;
@@ -177,4 +172,10 @@ $red: #ff3b30;
       }
     }
   }
+}
+
+/////////////////
+.clock {
+  display: grid;
+  grid-template: auto;
 }

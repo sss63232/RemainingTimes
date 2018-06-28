@@ -82,13 +82,13 @@ class App {
       const ts_now = new Date().getTime();
       const remainingMS = ts_death - ts_now;
       let remainingYearsSplit = (remainingMS / oneYearMS)
-        .toFixed(9)
+        .toFixed(8)
         .split(`.`);
 
       const remainingPercent = (
         (remainingMS / (ts_death - ts_birth)) *
         100
-      ).toFixed(9);
+      ).toFixed(8);
 
       view.renderTemplate(`final`, {
         integer: remainingYearsSplit[0],
@@ -96,10 +96,10 @@ class App {
         remainingPercent,
       });
 
-      requestAnimationFrame(updateRestOfMyLife);
+      // requestAnimationFrame(updateRestOfMyLife);
     };
 
-    setInterval(updateRestOfMyLife, 1000);
+    requestAnimationFrame(updateRestOfMyLife);
   }
 
   showBirthPage() {
