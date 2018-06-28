@@ -111,10 +111,27 @@
 
 
   <script id="final-template" type="text/x-handlebars-template">
+    <div class="outer">
+      <div class="middle">
+        <div class="inner">
+          <span class="q_title">The rest of your life:</span>
+          <div class="q_content">
+            <span>{{integer}}</span>
+            <span>{{fraction}}</span>
+            <span>{{remainingPercent}}</span>
+          </div>
+          <div class='btnArea'>
+            <div id='submitCountry' class="button">
+              submit
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <h1>The rest of your life:</h1>
-    <h1>{{integer}}</h1>
-    <h1>{{fraction}}</h1>
-    <h1>{{remainingPercent}}</h1>
+
   </script>
 
   <script id="age-template" type="text/x-handlebars-template">

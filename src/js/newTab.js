@@ -17,17 +17,17 @@ class App {
   constructor(elem) {
     this.elem = elem;
 
-    this.showBirthPage();
+    // this.showBirthPage();
     // this.showDetectedCountryPage();
     // this.showPickCountryPage();
 
-    // if (config.cleanStart) {
-    //   model.clearSyncStorage().then(() => {
-    //     this.start();
-    //   });
-    // } else {
-    //   this.start();
-    // }
+    if (config.cleanStart) {
+      model.clearSyncStorage().then(() => {
+        this.start();
+      });
+    } else {
+      this.start();
+    }
   }
 
   start() {
@@ -82,11 +82,13 @@ class App {
       const ts_now = new Date().getTime();
       const remainingMS = ts_death - ts_now;
       let remainingYearsSplit = (remainingMS / oneYearMS)
-        .toFixed(10)
+        .toFixed(9)
         .split(`.`);
 
-      const remainingPercent =
-        (remainingMS / (ts_death - ts_birth)) * 100;
+      const remainingPercent = (
+        (remainingMS / (ts_death - ts_birth)) *
+        100
+      ).toFixed(9);
 
       view.renderTemplate(`final`, {
         integer: remainingYearsSplit[0],
