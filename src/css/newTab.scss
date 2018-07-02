@@ -17,12 +17,11 @@ html {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background-color: transparent;
+  bottom: 0; // background-color: transparent;
+  background-color: #B0B5B9;
   background-size: cover;
   background-position: center center;
-  background-repeat: no-repeat;
-  background-image: url(../img/bg.jpg);
+  background-repeat: no-repeat; // background-image: url(../img/bg.jpg);
   z-index: $bg_z;
   transition: .3 ease-out;
 }
@@ -60,56 +59,54 @@ html {
   text-align: center;
 }
 
-.q_title {
-  font-size: 4rem;
-  line-height: 4rem
-}
-
-.q_content {
-  margin: 4rem;
-  span {
-    font-size: 6rem;
-    line-height: 6rem;
-    text-decoration: underline; // border-bottom: 2px solid #ffffff;
+.question {
+  .q__title {
+    font-size: 4rem;
+    line-height: 4rem
+  }
+  .q__content {
+    margin: 4rem;
+    .q__value {
+      font-size: 6rem;
+      line-height: 6rem; // text-decoration: underline;
+      // border-bottom: 2px solid #ffffff;
+    }
   }
 }
 
-.btnArea {
+.bottomBtnsArea {
   margin: 3rem;
   font-size: 1.5rem;
-}
-
-.button {
-  display: inline-block;
-  text-transform: uppercase;
-  color: white;
-  padding: 1.5rem;
-  border: 1px solid white;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.7);
-}
-
-#countrySelect {
-  display: block;
+  .button {
+    cursor: pointer;
+    display: inline-block;
+    text-transform: uppercase;
+    color: white;
+    padding: 1.5rem;
+    border: 1px solid white;
+    text-decoration: none;
+    margin: 0px 10px;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+  }
 }
 
 ////////////////////////////////////////
 .drop {
   display: inline-block;
   margin-right: .5rem;
-  .title {
+  .drop__title {
+    font-size: 4rem;
+    line-height: 4rem;
     text-transform: uppercase;
     cursor: pointer;
     &:hover {
       background-color: rgba(255, 255, 255, 0.4); // border-color: rgba(255, 255, 255, 0.7);
     }
     i {
-      font-size: 3rem;
+      font-size: 2rem;
     }
   }
 }
@@ -133,11 +130,13 @@ $red: #ff3b30;
   &.hide {
     display: none;
   }
-  .modal_title {
+  .modal__title {
     text-align: center;
     text-transform: uppercase;
+    font-size: 3rem;
+    text-decoration: underline;
   }
-  .modal_close {
+  .modal__close {
     position: absolute;
     top: 2rem;
     right: 2rem;
@@ -149,33 +148,84 @@ $red: #ff3b30;
       background-color: $hoverBgColor;
     }
   }
-  ul {
-    max-height: 10rem;
-    overflow: auto;
-    padding: 0px;
-    margin-top: 2rem;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    &.closed {
-      display: none;
-    }
-    li {
-      cursor: pointer;
-      list-style: none;
-      line-height: 2rem;
-      font-size: 2rem;
-      margin: 1rem;
-      text-align: center;
-      &:hover {
-        background-color: $hoverBgColor;
-      }
+}
+
+.dropList {
+  max-height: 10rem;
+  overflow: auto;
+  padding: 0px;
+  margin-top: 2rem;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  &.closed {
+    display: none;
+  }
+  li {
+    cursor: pointer;
+    list-style: none;
+    line-height: 2rem;
+    font-size: 2rem;
+    margin: 1rem;
+    text-align: center;
+    &:hover {
+      background-color: $hoverBgColor;
     }
   }
 }
 
 /////////////////
-.clock {
-  display: grid;
-  grid-template: auto;
+.final {
+  .final__title {
+    font-size: 4rem;
+  }
+}
+
+.number {
+  display: inline-block;
+  text-align: left;
+  .number__title {
+    font-size: 1.2rem;
+    position: relative;
+    top: 15px;
+  }
+}
+
+.counting {
+  text-align: left;
+  margin: 0;
+  .counting__main {
+    font-size: 8rem;
+  }
+  .counting__fraction {
+    margin-left: -30px; // vertical-align: super;
+    font-size: 1.5rem;
+    top: auto;
+  }
+}
+
+.flexArea {
+  .flexArea__title {
+    margin: 2rem;
+    font-size: 4rem;
+  }
+  .flexArea__items {
+    display: flex;
+    flex-flow: center;
+    .flexArea__item {
+      flex: auto;
+      margin: .5rem;
+      .item__title {
+        text-align: left;
+        font-size: 2rem;
+      }
+      .item__timesNumber {
+        font-size: 1.5rem;
+      }
+      .item__timesWord {
+        font-size: 1rem;
+        top: auto;
+      }
+    }
+  }
 }

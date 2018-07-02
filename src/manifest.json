@@ -1,5 +1,5 @@
 {
-  "name": "Remaining Time",
+  "name": "RestOfUrTime",
   "chrome_url_overrides": {
     "newtab": "newTab.html"
   },

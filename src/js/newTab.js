@@ -107,9 +107,9 @@ class App {
 
     this.listenId(`submitBirth`, `click`);
 
-    const titles = getClass('title');
-    [...titles].forEach(title =>
-      title.addEventListener('click', e => {
+    const dropTitles = getClass('drop__title');
+    [...dropTitles].forEach(dropTitle =>
+      dropTitle.addEventListener('click', e => {
         const type = e.currentTarget.dataset.dropType;
         view.renderModal({
           modalTitle: type,
@@ -121,8 +121,8 @@ class App {
           const value = e.target.textContent;
           const dropType = e.currentTarget.dataset.dropType;
           this[dropType] = value;
-          title.textContent = value;
-          title.dataset.dateValue = value;
+          dropTitle.textContent = value;
+          dropTitle.dataset.dateValue = value;
         });
       })
     );
@@ -131,39 +131,50 @@ class App {
   on_click_submitBirth(e) {
     e.preventDefault();
 
-    // TODO: 生日沒有輸入的檢查
-    const dropValueObj = {};
-
-    [...getClass(`title`)].forEach(title => {
-      const dropType = title.dataset.dropType;
-      const dateValue = title.dataset.dateValue;
-      if (dateValue === undefined) {
-        alert('no value');
-      } else {
-        const isTypeMonth = dropType === `month`;
-        dropValueObj[dropType] = isTypeMonth
-          ? constData.list.month.findIndex(
-              elem => elem === dateValue
-            ) + 1
-          : dateValue;
+    const dropValueObj = this.getDropValueObj();
+    if (dropValueObj) {
+      const { year, month, day } = dropValueObj;
+      console.log('--------');
+      console.log(dropValueObj);
+      console.log('--------');
+      const birthdayValue = `${year}/${month}/${day}`;
+      if (birthdayValue) {
+        this.birth = birthdayValue;
+        model
+          .setSyncStorage({
+            birth: birthdayValue,
+          })
+          .then(() => {
+            console.log('---------');
+            console.log(`set ${birthdayValue} success`);
+            console.log('---------');
+          });
+        this.showFinalPage();
       }
-    });
-
-    const { year, month, day } = dropValueObj;
-    const birthdayValue = `${year}/${month}/${day}`;
-    if (birthdayValue) {
-      this.birth = birthdayValue;
-      model
-        .setSyncStorage({
-          birth: birthdayValue,
-        })
-        .then(() => {
-          console.log('---------');
-          console.log(`set ${birthdayValue} success`);
-          console.log('---------');
-        });
-      this.showFinalPage();
     }
+  }
+
+  // 生日沒有輸入的檢查
+  getDropValueObj() {
+    const dropValueObj = {};
+    const dropTitles = getClass(`drop__title`);
+    for (let i = 0; i < dropTitles.length; i++) {
+      const dropTitle = dropTitles[i];
+      const dateValue = dropTitle.dataset.dateValue;
+      if (dateValue === undefined) {
+        alert(`no value`);
+        return;
+      }
+
+      const dropType = dropTitle.dataset.dropType;
+      const isTypeMonth = dropType === `month`;
+      dropValueObj[dropType] = isTypeMonth
+        ? constData.list.month.findIndex(
+            elem => elem === dateValue
+          ) + 1
+        : dateValue;
+    }
+    return dropValueObj;
   }
 
   showDetectedCountryPage() {

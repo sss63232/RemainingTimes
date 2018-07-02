@@ -17,8 +17,8 @@
   <script id="modal-template" type="text/x-handlebars-template">
     <div id='modal' class="active">
       <header>
-        <div class='q_title modal_title '>{{modalTitle}}</div>
-        <span class='modal_close'>close</span>
+        <div class='q__title modal__title '>{{modalTitle}}</div>
+        <span class='modal__close'>close</span>
       </header>
       <section>
         <ul class='dropList' data-drop-type='{{modalTitle}}'>
@@ -34,31 +34,33 @@
     <div class="outer">
       <div class="middle">
         <div class="inner">
-          <span class="q_title">What's your birthday? </span>
-          <div class="q_content">
-            <div class='drop'>
-              <span data-drop-type='year' class='title'>Year
-                <i class="icon-down-open-big"></i>
-              </span>
+          <div class="question">
+            <span class="q__title">What's your birthday? </span>
+            <div class="q__content">
+              <section class="dropArea">
+                <div class='drop'>
+                  <span data-drop-type='year' class='drop__title'>Year
+                    <i class="icon-down-open-big"></i>
+                  </span>
+                </div>
+                <div class='drop'>
+                  <span data-drop-type='month' class='drop__title'>Month
+                    <i class="icon-down-open-big"></i>
+                  </span>
+                </div>
+                <div class='drop'>
+                  <span data-drop-type='day' class='drop__title'>Day
+                    <i class="icon-down-open-big"></i>
+                  </span>
+                </div>
+              </section>
             </div>
-            <div class='drop'>
-              <span data-drop-type='month' class='title'>Month
-                <i class="icon-down-open-big"></i>
-              </span>
-            </div>
-            <div class='drop'>
-              <span data-drop-type='day' class='title'>Day
-                <i class="icon-down-open-big"></i>
-              </span>
+            <div class="bottomBtnsArea">
+              <div id='submitBirth' class="button">
+                submit
+              </div>
             </div>
           </div>
-
-          <div class="btnArea">
-            <div id='submitBirth' class="button">
-              submit
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
@@ -68,16 +70,18 @@
     <div class="outer">
       <div class="middle">
         <div class="inner">
-          <span class="q_title">Hey, are you from </span>
-          <div class="q_content">
-            <span id='detectedCountry'>{{detectedCountry}}</span>
-          </div>
-          <div class="btnArea">
-            <div id='detectedCountryYes' class="button">
-              Yes
+          <div class="question">
+            <span class="q__title">Hey, are you from </span>
+            <div class="q__content">
+              <span class="q__value" id='detectedCountry'>{{detectedCountry}}</span>
             </div>
-            <div id='detectedCountryNo' class="button">
-              No
+            <div class="bottomBtnsArea">
+              <div id='detectedCountryYes' class="button">
+                Yes
+              </div>
+              <div id='detectedCountryNo' class="button">
+                No
+              </div>
             </div>
           </div>
         </div>
@@ -89,8 +93,8 @@
     <div class="outer">
       <div class="middle">
         <div class="inner">
-          <span class="q_title">Hey, are you from </span>
-          <div class="q_content">
+          <span class="q__title">Hey, are you from </span>
+          <div class="q__content">
             <div class='drop year'>
               <span data-drop-type='country' class='title'>
                 country
@@ -98,7 +102,7 @@
               </span>
             </div>
           </div>
-          <div class='btnArea'>
+          <div class='bottomBtnsArea'>
             <div id='submitCountry' class="button">
               submit
             </div>
@@ -114,38 +118,58 @@
     <div class="outer">
       <div class="middle">
         <div class="inner">
-          <span class="q_title">The rest of your life:</span>
-          <div class="q_content">
-            <div class="clock">
-              <div class="column days">
-                <div class="timer" id="days">01</div>
-                <div class="text">DAYS</div>
-              </div>
-              <div class="timer days">:</div>
-              <div class="column">
-                <div class="timer" id="hours">09</div>
-                <div class="text">HOURS</div>
-              </div>
-              <div class="timer">:</div>
-              <div class="column">
-                <div class="timer" id="minutes">24</div>
-                <div class="text">MINUTES</div>
-              </div>
-              <div class="timer">:</div>
-              <div class="column">
-                <div class="timer" id="seconds">46</div>
-                <div class="text">SECONDS</div>
-              </div>
-            </div>
-
-
-            <span>{{integer}}</span>
-            <span>{{fraction}}</span>
-            <span>{{remainingPercent}}</span>
-          </div>
-          <div class='btnArea'>
-            <div id='submitCountry' class="button">
-              submit
+          <div class="final">
+            <span class="final__title">The rest of your life:</span>
+            <div class="final__content">
+              <section class="number">
+                <span class="number__title">
+                  YEARS:
+                </span>
+                <p class="counting">
+                  <span class="counting__main">{{integer}}
+                    <sup class="counting__fraction">.{{fraction}}</pan>
+                  </span>
+                </p>
+              </section>
+              <section class="flexArea">
+                <div class="flexArea__title">
+                  In the reaming time, you could only be able to
+                </div>
+                <div class="flexArea__items">
+                  <div class="flexArea__item">
+                    <span class="item__title">Watching Olympics</span>
+                    <p class="item__content">
+                      <span class="item__timesNumber">10
+                        <sup class="item__timesWord">times</sup>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="flexArea__item">
+                    <span class="item__title">Voting for a new president</span>
+                    <p class="item__content">
+                      <span class="item__timesNumber">10
+                        <sup class="item__timesWord">times</sup>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="flexArea__item">
+                    <span class="item__title">Enjoy Weekends</span>
+                    <p class="item__content">
+                      <span class="item__timesNumber">10
+                        <sup class="item__timesWord">times</sup>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="flexArea__item">
+                    <span class="item__title">dining with your parents</span>
+                    <p class="item__content">
+                      <span class="item__timesNumber">10
+                        <sup class="item__timesWord">times</sup>
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
         </div>
@@ -153,7 +177,6 @@
     </div>
 
 
-    <h1>The rest of your life:</h1>
 
   </script>
 
