@@ -81,9 +81,18 @@ class App {
     const updateRestOfMyLife = () => {
       const ts_now = new Date().getTime();
       const remainingMS = ts_death - ts_now;
-      let remainingYearsSplit = (remainingMS / oneYearMS)
+      const remainingYearsSplit = (remainingMS / oneYearMS)
         .toFixed(8)
         .split(`.`);
+      const [yearInt, yearFraction] = remainingYearsSplit;
+
+      const olympicTimes = Math.round(yearInt / 4);
+      const sakuraTimes = yearInt;
+      const weekendsTimes = Math.round(yearInt * 52);
+      const parentsTimes = this.getParentsTimes(yearInt);
+      const grandparentsTimes = this.getGrandparentsTimes(
+        yearInt
+      );
 
       const remainingPercent = (
         (remainingMS / (ts_death - ts_birth)) *
@@ -91,15 +100,34 @@ class App {
       ).toFixed(8);
 
       view.renderTemplate(`final`, {
-        integer: remainingYearsSplit[0],
-        fraction: remainingYearsSplit[1],
+        yearInt,
+        yearFraction,
         remainingPercent,
+        olympicTimes,
+        sakuraTimes,
+        weekendsTimes,
+        parentsTimes,
+        grandparentsTimes,
       });
 
       // requestAnimationFrame(updateRestOfMyLife);
     };
 
     requestAnimationFrame(updateRestOfMyLife);
+  }
+
+  getParentsTimes(remainingYear) {
+    const parentsRemainingYear = remainingYear - 35;
+    return parentsRemainingYear > 0
+      ? parentsRemainingYear * 24
+      : `maybe < 10`;
+  }
+
+  getGrandparentsTimes(remainingYear) {
+    const grandparentsRemainingYears = remainingYear - 55;
+    return grandparentsRemainingYears > 0
+      ? grandparentsRemainingYears * 12
+      : `maybe < 5`;
   }
 
   showBirthPage() {

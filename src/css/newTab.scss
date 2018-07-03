@@ -21,7 +21,8 @@ html {
   background-color: #B0B5B9;
   background-size: cover;
   background-position: center center;
-  background-repeat: no-repeat; // background-image: url(../img/bg.jpg);
+  background-repeat: no-repeat;
+  background-image: url(../img/bg.jpg);
   z-index: $bg_z;
   transition: .3 ease-out;
 }
@@ -177,13 +178,15 @@ $red: #ff3b30;
 /////////////////
 .final {
   .final__title {
-    font-size: 4rem;
+    font-size: 6rem;
+    display: block;
   }
 }
 
 .number {
   display: inline-block;
   text-align: left;
+  margin: 6rem;
   .number__title {
     font-size: 1.2rem;
     position: relative;
@@ -206,7 +209,7 @@ $red: #ff3b30;
 
 .flexArea {
   .flexArea__title {
-    margin: 2rem;
+    margin-bottom: 3rem;
     font-size: 4rem;
   }
   .flexArea__items {
@@ -217,13 +220,16 @@ $red: #ff3b30;
       margin: .5rem;
       .item__title {
         text-align: left;
-        font-size: 2rem;
+        font-size: 1.5rem;
+      }
+      .item__content {
+        margin-top: 2rem;
       }
       .item__timesNumber {
         font-size: 1.5rem;
       }
       .item__timesWord {
-        font-size: 1rem;
+        font-size: 0.7rem;
         top: auto;
       }
     }

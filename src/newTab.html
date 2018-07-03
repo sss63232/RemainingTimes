@@ -126,8 +126,8 @@
                   YEARS:
                 </span>
                 <p class="counting">
-                  <span class="counting__main">{{integer}}
-                    <sup class="counting__fraction">.{{fraction}}</pan>
+                  <span class="counting__main">{{yearInt}}
+                    <sup class="counting__fraction">.{{yearFraction}}</pan>
                   </span>
                 </p>
               </section>
@@ -137,33 +137,41 @@
                 </div>
                 <div class="flexArea__items">
                   <div class="flexArea__item">
-                    <span class="item__title">Watching Olympics</span>
+                    <span class="item__title">Watching Olympic</span>
                     <p class="item__content">
-                      <span class="item__timesNumber">10
+                      <span id="olympicTimes" class="item__timesNumber">{{olympicTimes}}
                         <sup class="item__timesWord">times</sup>
                       </span>
                     </p>
                   </div>
                   <div class="flexArea__item">
-                    <span class="item__title">Voting for a new president</span>
+                    <span class="item__title">Picnicking under sakura</span>
                     <p class="item__content">
-                      <span class="item__timesNumber">10
+                      <span id="sakuraTimes" class="item__timesNumber">{{sakuraTimes}}
                         <sup class="item__timesWord">times</sup>
                       </span>
                     </p>
                   </div>
                   <div class="flexArea__item">
-                    <span class="item__title">Enjoy Weekends</span>
+                    <span class="item__title">Enjoying weekends</span>
                     <p class="item__content">
-                      <span class="item__timesNumber">10
+                      <span id="weekendsTimes" class="item__timesNumber">{{weekendsTimes}}
                         <sup class="item__timesWord">times</sup>
                       </span>
                     </p>
                   </div>
                   <div class="flexArea__item">
-                    <span class="item__title">dining with your parents</span>
+                    <span class="item__title">Dining with parents</span>
                     <p class="item__content">
-                      <span class="item__timesNumber">10
+                      <span id="parentsTimes" class="item__timesNumber">{{parentsTimes}}
+                        <sup class="item__timesWord">times</sup>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="flexArea__item">
+                    <span class="item__title">Visiting grandparents</span>
+                    <p class="item__content">
+                      <span id="grandparentsTimes" class="item__timesNumber">{{grandparentsTimes}}
                         <sup class="item__timesWord">times</sup>
                       </span>
                     </p>
