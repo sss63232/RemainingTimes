@@ -42,11 +42,13 @@
                   <span data-drop-type='year' class='drop__title'>Year
                     <i class="icon-down-open-big"></i>
                   </span>
+                  <span class='drop__slash'> / </span>
                 </div>
                 <div class='drop'>
                   <span data-drop-type='month' class='drop__title'>Month
                     <i class="icon-down-open-big"></i>
                   </span>
+                  <span class='drop__slash'> / </span>
                 </div>
                 <div class='drop'>
                   <span data-drop-type='day' class='drop__title'>Day
@@ -71,7 +73,7 @@
       <div class="middle">
         <div class="inner">
           <div class="question">
-            <span class="q__title">Hey, are you from </span>
+            <span class="q__title">Hey! Are you from </span>
             <div class="q__content">
               <span class="q__value" id='detectedCountry'>{{detectedCountry}}</span>
             </div>
@@ -93,18 +95,21 @@
     <div class="outer">
       <div class="middle">
         <div class="inner">
-          <span class="q__title">Hey, are you from </span>
-          <div class="q__content">
-            <div class='drop year'>
-              <span data-drop-type='country' class='title'>
-                country
-                <i class="fa fa-angle-down"></i>
-              </span>
+          <div class="question">
+            <span class="q__title">Where are you from?</span>
+            <div class="q__content">
+              <section class="dropArea">
+                <div class='drop'>
+                  <span data-drop-type='country' class='drop__title'>Country List
+                    <i class="icon-down-open-big"></i>
+                  </span>
+                </div>
+              </section>
             </div>
-          </div>
-          <div class='bottomBtnsArea'>
-            <div id='submitCountry' class="button">
-              submit
+            <div class='bottomBtnsArea'>
+              <div id='submitCountry' class="button">
+                submit
+              </div>
             </div>
           </div>
         </div>
@@ -133,7 +138,7 @@
               </section>
               <section class="flexArea">
                 <div class="flexArea__title">
-                  In the reaming time, you could only be able to
+                  In the reaming times, you could be able to...
                 </div>
                 <div class="flexArea__items">
                   <div class="flexArea__item">
