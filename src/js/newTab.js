@@ -79,6 +79,9 @@ class App {
     const ts_death = ts_birth + lifeExpectancy * oneYearMS;
 
     const updateRestOfMyLife = () => {
+      const fraction = getClass(`counting__fraction`)[0];
+      if (fraction) fraction.classList.remove(`scaled`);
+
       const ts_now = new Date().getTime();
       const remainingMS = ts_death - ts_now;
       const remainingYearsSplit = (remainingMS / oneYearMS)
@@ -87,7 +90,6 @@ class App {
       const [yearInt, yearFraction] = remainingYearsSplit;
 
       const olympicTimes = Math.round(yearInt / 4);
-      const sakuraTimes = yearInt;
       const weekendsTimes = Math.round(yearInt * 52);
       const parentsTimes = this.getParentsTimes(yearInt);
       const grandparentsTimes = this.getGrandparentsTimes(
@@ -104,13 +106,13 @@ class App {
         yearFraction,
         remainingPercent,
         olympicTimes,
-        sakuraTimes,
         weekendsTimes,
         parentsTimes,
         grandparentsTimes,
       });
+      if (fraction) fraction.classList.add(`scaled`);
 
-      // requestAnimationFrame(updateRestOfMyLife);
+      requestAnimationFrame(updateRestOfMyLife);
     };
 
     requestAnimationFrame(updateRestOfMyLife);

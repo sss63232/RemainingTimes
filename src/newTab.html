@@ -10,7 +10,24 @@
 
 <body>
   <div class="icon-down-open-big"></div>
-  <div id="bg"></div>
+  <div id="bg">
+    <div class="scene">
+      <div class="wrap">
+        <div class="wall wall-right"></div>
+        <div class="wall wall-left"></div>
+        <div class="wall wall-top"></div>
+        <div class="wall wall-bottom"></div>
+        <div class="wall wall-back"></div>
+      </div>
+      <div class="wrap">
+        <div class="wall wall-right"></div>
+        <div class="wall wall-left"></div>
+        <div class="wall wall-top"></div>
+        <div class="wall wall-bottom"></div>
+        <div class="wall wall-back"></div>
+      </div>
+    </div>
+  </div>
   <div id="globalModal"></div>
   <div id="app"></div>
 
@@ -76,6 +93,7 @@
             <span class="q__title">Hey! Are you from </span>
             <div class="q__content">
               <span class="q__value" id='detectedCountry'>{{detectedCountry}}</span>
+
             </div>
             <div class="bottomBtnsArea">
               <div id='detectedCountryYes' class="button">
@@ -150,14 +168,6 @@
                     </p>
                   </div>
                   <div class="flexArea__item">
-                    <span class="item__title">Picnicking under sakura</span>
-                    <p class="item__content">
-                      <span id="sakuraTimes" class="item__timesNumber">{{sakuraTimes}}
-                        <sup class="item__timesWord">times</sup>
-                      </span>
-                    </p>
-                  </div>
-                  <div class="flexArea__item">
                     <span class="item__title">Enjoying weekends</span>
                     <p class="item__content">
                       <span id="weekendsTimes" class="item__timesNumber">{{weekendsTimes}}
@@ -188,16 +198,6 @@
         </div>
       </div>
     </div>
-
-
-
-  </script>
-
-  <script id="age-template" type="text/x-handlebars-template">
-    <h1 class="age-label">AGE</h1>
-    <h2 class="count">{{year}}
-      <sup>.{{milliseconds}}</sup>
-    </h2>
   </script>
 
   <!-- <script src="./js/helpers/material.min.js"></script> -->
